@@ -20,7 +20,7 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     // sameSite: true,
-    // maxAge: 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
 
@@ -43,6 +43,22 @@ const validateLogin = async function (req, res, next) {
   const comparePassword = bcrypt.compareSync(password, foundUser.password);
   if (!comparePassword)
     return res.send('Wrong password or email');
+  next();
+}
+
+const validatePasswordChange = async function (req, res, next) {
+  console.log(req.body.user);
+  const { password, 'conf-password': confPassword } = req.body.user;
+  console.log(password, confPassword);
+  if (password !== confPassword) {
+    return res.send("Error: passwords don't match");
+  }
+  try {
+    const hashPassword = bcrypt.hashSync(password, 12);
+    await User.update({password: hashPassword}, {where: {email: req.session.email}});
+  } catch (err) {
+    console.log(err);
+  }
   next();
 }
 
@@ -89,6 +105,20 @@ app.post('/register', async (req, res) => {
 app.get('/logout', isLoggedIn, (req, res) => {
   req.session.destroy();
   res.redirect('/');
+})
+
+app.get('/account', isLoggedIn, (req, res) => {
+  res.render('users/account');
+})
+
+app.get('/change_password', (req, res) => {
+  res.render('users/change_password');
+})
+
+app.post('/change_password', validatePasswordChange, (req, res) => {
+  //TODO: implement a flash telling user must log back in
+  req.session.destroy();
+  res.redirect('/login');
 })
 
 app.listen(PORT, () =>{
