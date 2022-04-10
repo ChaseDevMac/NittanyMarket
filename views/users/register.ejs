@@ -1,0 +1,23 @@
+<% layout('layouts/generic') %>
+<div class="col-6 offset-3">
+  <form class="row g-3 validate-form" action="/register" method="POST">
+    <h1>Register</h1>
+    <div class="col-md-12">
+      <label for="email" class="form-label">Email</label>
+      <input type="text" class="form-control" id="email" name="user[email]">
+    </div>
+    <div class="col-md-12">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="user[password]">
+    </div>
+    <div class="col-12">
+      <button class="btn btn-primary">Register</button>
+    </div>
+    <div class="container-sm mt-4">
+      Already have an account? <a id="create-account" href="/login">Login</a>
+    </div>
+  </form> 
+</div>
+
+
+

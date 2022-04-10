@@ -40,6 +40,22 @@ app.post('/login', validateLogin, (req, res) => {
   res.redirect('/');
 });
 
+app.get('/register', (req, res) => {
+  res.render('users/register');
+});
+
+app.post('/register', async (req, res) => {
+  try {
+    const { email, password } = req.body.user;
+    const hashPass = bcrypt.hashSync(password, 12);
+    const newUser = User.build({ email, password: hashPass });
+    await newUser.save();
+    res.redirect('/login');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.listen(PORT, () =>{
   console.log(`Listening on ${PORT}`);
 });
