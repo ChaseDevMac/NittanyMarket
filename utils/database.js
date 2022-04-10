@@ -9,17 +9,26 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 
 const testDB = async function () {
   try {
-    await db.sequelize.authenticate();
+    await sequelize.authenticate();
     console.log('MariaDB connected');
   } catch (err) {
     console.error('Unable to connect to MariaDB', err);
   }
 };
 
+const testQuery = async function(query) {
+  try {
+    const result = await sequelize.query(query);
+    console.log(result[0][0]);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 const db = {}
 
-db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.testDB = testDB;
+db.testQuery = testQuery;
 
 module.exports = db;
