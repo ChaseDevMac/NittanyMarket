@@ -1,0 +1,10 @@
+<% layout('layouts/generic') %>
+<div class="col-6 offset-3">
+  <h1>Categories</h1>
+  <ul>
+  <% for (let category of categories) { %>
+  <li><a href="/marketplace/<%= category.child %>"><%= category.child %></a></li>
+  <% } %>
+  </ul>
+</div>
+

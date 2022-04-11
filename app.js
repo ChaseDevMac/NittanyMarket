@@ -4,6 +4,9 @@ const app = express();
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 
+const Category = require('./models/category');
+const { sequelize } = require('./utils/database');
+
 const PORT = 8080;
 
 app.set('view engine', 'ejs');
@@ -40,6 +43,18 @@ app.get('/', (req, res) => {
 //routes
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+
+app.get('/marketplace', async (req, res) => {
+  const categories = await Category.findAll({where: {parent: 'Root'}});
+  res.locals.categories = categories;
+  console.log(categories);
+  res.render('marketplace/category');
+});
+
+app.get('/marketplace/:category', async (req, res) => {
+  const { category } = req.params;
+  res.send(category);
+});
 
 app.listen(PORT, (err) => {
   try {
