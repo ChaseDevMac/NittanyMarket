@@ -6,8 +6,9 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const User = require('./models/users');
+const Buyer = require('./models/buyers');
 
-const PORT = 8080;
+const PORT = 8000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 })
 
 const db = require('./utils/database');
+const { sequelize } = require('./utils/database');
 
 const validateLogin = async function (req, res, next) {
   const { email, password } = req.body.user;
@@ -66,6 +68,27 @@ const isLoggedIn = async function (req, res, next) {
   console.log('in isLoggedIn');
   if (!req.session.email) {
     return res.redirect('/login');
+  }
+  next();
+}
+
+const getProfile = async function (req, res, next) {
+  try {
+    const email = req.session.email;
+    const query = `SELECT * FROM Buyers WHERE email = '${email}'`;
+    const result = await sequelize.query(query, {model: Buyer});
+    const profile = { 
+      first_name: firstName, 
+      last_name: lastName, 
+      gender, 
+      age, 
+      home_addr_id: homeAddr, 
+      billing_addr_id: billAddr} = result[0];
+    res.locals.profile = profile;
+    res.locals.email = email;
+    console.log(profile);
+  } catch (err) {
+    console.log(err);
   }
   next();
 }
@@ -111,15 +134,19 @@ app.get('/account', isLoggedIn, (req, res) => {
   res.render('users/account');
 })
 
-app.get('/change_password', (req, res) => {
+app.get('/change_password', isLoggedIn, (req, res) => {
   res.render('users/change_password');
 })
 
-app.post('/change_password', validatePasswordChange, (req, res) => {
+app.post('/change_password', isLoggedIn, validatePasswordChange, (req, res) => {
   //TODO: implement a flash telling user must log back in
   req.session.destroy();
   res.redirect('/login');
-})
+});
+
+app.get('/profile', isLoggedIn, getProfile, (req, res) => {
+  res.render('users/profile');
+});
 
 app.listen(PORT, () =>{
   console.log(`Listening on ${PORT}`);
