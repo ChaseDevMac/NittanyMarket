@@ -10,12 +10,14 @@ Buyer.init({
     allowNull: false,
     primaryKey: true,
   },
-  first_name: {
+  firstName: {
     type: DataTypes.STRING,
+    field: 'first_name',
     allowNull: false,
   },
-  last_name: {
+  lastName: {
     type: DataTypes.STRING,
+    field: 'last_name',
     allowNull: false,
   },
   gender: {
@@ -26,12 +28,14 @@ Buyer.init({
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  home_addr_id: {
+  homeAddrId: {
     type: DataTypes.STRING,
+    field: 'home_addr_id',
     allowNull: false,
   },
-  billing_addr_id: {
+  billAddrId: {
     type: DataTypes.STRING,
+    field: 'billing_addr_id',
     allowNull: false,
   },
 }, 

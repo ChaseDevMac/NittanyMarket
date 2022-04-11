@@ -32,7 +32,6 @@ module.exports.getProfile = async function (req, res, next) {
     const email = req.session.email;
     const profile = await Buyer.findByPk(email);
     res.locals.profile = profile;
-    console.log(profile);
   } catch (err) {
     console.log(err);
   }
