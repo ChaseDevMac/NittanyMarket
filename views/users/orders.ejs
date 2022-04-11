@@ -1,0 +1,13 @@
+<% layout('layouts/generic') %>
+<div class="col-6 offset-3">
+  <h1>My Orders</h1>
+  <% for (let order of orders) { %>
+    <ul>
+      <li>Seller Email: <%= order.seller_email %></li>
+      <li>Order Date: <%= order.order_date %></li>
+      <li>Quantity: <%= order.quantity %></li>
+      <li>Cost: $<%= order.payment %></li>
+    </ul>
+  <% } %>
+</div>
+

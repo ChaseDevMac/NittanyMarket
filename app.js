@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const User = require('./models/users');
 const Buyer = require('./models/buyers');
+const Order = require('./models/orders');
 const Address = require('./models/addresses');
 
 const PORT = 8000;
@@ -94,6 +95,18 @@ const getProfile = async function (req, res, next) {
   next();
 }
 
+const getOrders = async function (req, res, next) {
+  try {
+    const buyerEmail = req.session.email;
+    const query = `SELECT * FROM Orders WHERE buyer_email = '${buyerEmail}'`;
+    const orders = await sequelize.query(query, {model: Order});
+    res.locals.orders = orders;
+  } catch (err) {
+    console.log(err);
+  }
+  next();
+}
+
 const getAddresses = async function (req, res, next) {
   try {
     const email = req.session.email;
@@ -161,6 +174,10 @@ app.post('/change_password', isLoggedIn, validatePasswordChange, (req, res) => {
   req.session.destroy();
   res.redirect('/login');
 });
+
+app.get('/orders', isLoggedIn, getOrders, async (req, res) => {
+  res.render('users/orders');
+})
 
 app.get('/profile', isLoggedIn, getProfile, (req, res) => {
   res.render('users/profile');
