@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const User = require('./models/users');
 const Buyer = require('./models/buyers');
+const Address = require('./models/addresses');
 
 const PORT = 8000;
 
@@ -93,6 +94,23 @@ const getProfile = async function (req, res, next) {
   next();
 }
 
+const getAddresses = async function (req, res, next) {
+  try {
+    const email = req.session.email;
+    const query = `SELECT B.first_name, B.last_name, A.street_num, A.street_name, A.zipcode, Z.city, Z.state_id 
+                       FROM Addresses A, Buyers B, ZipcodeInfo Z 
+                       WHERE B.email='${email}' 
+                       AND A.zipcode = Z.zipcode\n AND `;
+    const homeAddr = await sequelize.query(query + 'A.addr_id = B.home_addr_id'); 
+    const billingAddr = await sequelize.query(query + 'A.addr_id = B.billing_addr_id');
+    res.locals.homeAddr = homeAddr[0][0];
+    res.locals.billingAddr = billingAddr[0][0];
+  } catch (err) {
+    console.log(err);
+  }
+  next();
+}
+
 app.get('/', (req, res) => {
   res.render('home');
 });
@@ -146,6 +164,10 @@ app.post('/change_password', isLoggedIn, validatePasswordChange, (req, res) => {
 
 app.get('/profile', isLoggedIn, getProfile, (req, res) => {
   res.render('users/profile');
+});
+
+app.get('/addresses', isLoggedIn, getAddresses, (req, res) => {
+  res.render('users/addresses');
 });
 
 app.listen(PORT, () =>{

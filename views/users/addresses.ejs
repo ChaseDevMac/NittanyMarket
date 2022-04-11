@@ -1,0 +1,18 @@
+<% layout('layouts/generic') %>
+<div class="col-6 offset-3">
+  <h1>My Addresses</h1>
+  <h2>Home</h2>
+  <ul>
+    <li><%= homeAddr.first_name %> <%= homeAddr.last_name %></li>
+    <li><%= homeAddr.street_num %> <%= homeAddr.street_name %></li>
+    <li><%= homeAddr.city %> <%= homeAddr.state_id %> <%= homeAddr.zipcode %></li>
+  </ul>
+  <h2>Billing</h2>
+  <ul>
+    <li><%= billingAddr.first_name %> <%= billingAddr.last_name %></li>
+    <li><%= billingAddr.street_num %> <%= billingAddr.street_name %></li>
+    <li><%= billingAddr.city %> <%= billingAddr.state_id %> <%= billingAddr.zipcode %></li>
+  </ul>
+</div>
+
+
