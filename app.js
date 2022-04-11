@@ -124,6 +124,25 @@ const getAddresses = async function (req, res, next) {
   next();
 }
 
+const getCreditCards = async function (req, res, next) {
+  try {
+    const email = req.session.email;
+    const query = `SELECT B.first_name, B.last_name, C.ccn, C.exp_month, C.exp_year, C.brand
+                    FROM Buyers B, CreditCards C
+                    WHERE B.email = '${email}'
+                    AND B.email = C.owner`;
+    const result = await sequelize.query(query);
+    let card = result[0][0];
+    console.log(card);
+    card.ccn = card.ccn.slice(-4);
+    console.log(card);
+    res.locals.card = card;
+  } catch(err) {
+    console.log(err);
+  }
+  next();
+}
+
 app.get('/', (req, res) => {
   res.render('home');
 });
@@ -185,6 +204,10 @@ app.get('/profile', isLoggedIn, getProfile, (req, res) => {
 
 app.get('/addresses', isLoggedIn, getAddresses, (req, res) => {
   res.render('users/addresses');
+});
+
+app.get('/cards', isLoggedIn, getCreditCards, (req, res) => {
+  res.render('users/cards');
 });
 
 app.listen(PORT, () =>{
