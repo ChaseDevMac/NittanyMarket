@@ -5,10 +5,10 @@ const ejsMate = require('ejs-mate');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 
-const User = require('./models/users');
-const Buyer = require('./models/buyers');
-const Order = require('./models/orders');
-const Address = require('./models/addresses');
+const User = require('./models/user');
+const Buyer = require('./models/buyer');
+const Order = require('./models/order');
+const Address = require('./models/address');
 
 const PORT = 8000;
 
