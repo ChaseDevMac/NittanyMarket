@@ -30,17 +30,8 @@ module.exports.isLoggedIn = async function (req, res, next) {
 module.exports.getProfile = async function (req, res, next) {
   try {
     const email = req.session.email;
-    const query = `SELECT * FROM Buyers WHERE email = '${email}'`;
-    const result = await sequelize.query(query, {model: Buyer});
-    const profile = { 
-      first_name: firstName, 
-      last_name: lastName, 
-      gender, 
-      age, 
-      home_addr_id: homeAddr, 
-      billing_addr_id: billAddr} = result[0];
+    const profile = await Buyer.findByPk(email);
     res.locals.profile = profile;
-    res.locals.email = email;
     console.log(profile);
   } catch (err) {
     console.log(err);
