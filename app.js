@@ -2,15 +2,13 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const ejsMate = require('ejs-mate');
-const bcrypt = require('bcrypt');
 const session = require('express-session');
 
-const User = require('./models/user');
 const Buyer = require('./models/buyer');
 const Order = require('./models/order');
 const Address = require('./models/address');
 
-const PORT = 8000;
+const PORT = 8080;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -38,17 +36,7 @@ app.use((req, res, next) => {
 
 const db = require('./utils/database');
 const { sequelize } = require('./utils/database');
-
-const validateLogin = async function (req, res, next) {
-  const { email, password } = req.body.user;
-  const foundUser = await User.findByPk(email);
-  if (!foundUser)
-    return res.send('Wrong password or email');
-  const comparePassword = bcrypt.compareSync(password, foundUser.password);
-  if (!comparePassword)
-    return res.send('Wrong password or email');
-  next();
-}
+const authRoutes = require('./routes/auth');
 
 const validatePasswordChange = async function (req, res, next) {
   console.log(req.body.user);
@@ -143,36 +131,10 @@ const getCreditCards = async function (req, res, next) {
   next();
 }
 
+app.use('/', authRoutes);
+
 app.get('/', (req, res) => {
   res.render('home');
-});
-
-app.get('/login', (req, res) => {
-  res.render('users/login');
-});
-
-app.post('/login', validateLogin, (req, res) => {
-  console.log(req.body);
-  req.session.email = req.body.user.email;
-  res.redirect('/');
-});
-
-app.get('/register', (req, res) => {
-  res.render('users/register');
-});
-
-app.post('/register', async (req, res) => {
-  try {
-    const { email, password } = req.body.user;
-    const hashPass = bcrypt.hashSync(password, 12);
-    const newUser = User.build({ email, password: hashPass });
-    await newUser.save();
-    req.session.email = newUser.email;
-    return res.redirect('/');
-  } catch (err) {
-    console.log(err);
-    res.send('Error');
-  }
 });
 
 app.get('/logout', isLoggedIn, (req, res) => {
@@ -210,6 +172,10 @@ app.get('/cards', isLoggedIn, getCreditCards, (req, res) => {
   res.render('users/cards');
 });
 
-app.listen(PORT, () =>{
-  console.log(`Listening on ${PORT}`);
+app.listen(PORT, (err) => {
+  try {
+    console.log(`Listening on ${PORT}`);
+  } catch (err) {
+    console.log('Error', err);
+  }
 });
