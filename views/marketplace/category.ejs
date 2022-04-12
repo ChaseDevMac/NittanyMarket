@@ -1,10 +1,44 @@
 <% layout('layouts/generic') %>
-<div class="col-6 offset-3">
-  <h1>Categories</h1>
-  <ul>
-  <% for (let category of categories) { %>
-  <li><a href="/marketplace/<%= category.child %>"><%= category.child %></a></li>
+<div class="col-8 offset-2">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-5">
+    <% for (let i = 0; i < parentCategories.length; i++) { %>
+      <% if (i === parentCategories.length - 1) { %>
+        <li class="breadcrumb-item active"><%= parentCategories[i] %></li>
+      <% } else { %>
+        <li class="breadcrumb-item"><a href="/marketplace/<%= parentCategories[i] %>"><%= parentCategories[i] %></a></li>
+      <% } %>
+    <% } %>
+    </ol>
+  </nav>
+  <% if (childCategories.length !== 0) { %>
+    <h2>Filter by Category</h2>
+    <div class="list-group mb-5">
+      <% for (let child of childCategories) { %>
+        <a href="/marketplace/<%= child.child %>#" class="list-group-item list-group-item-action"><%= child.child %></a>
+      <% } %>
+    </div>
   <% } %>
-  </ul>
-</div>
 
+  <% if (listings.length !== 0) { %>
+    <h2>Shop <%= currCategory %></h2>
+    <% for (let listing of listings) { %>
+    <div class="card mb-3">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"><%= listing.title %></h5>
+            <p class="card-text"><%= listing.productName %></p>
+            <p class="card-text">
+              <small class="text-muted"><%= listing.price %></small>
+            </p>
+            <p class="card-text">
+              <small class="text-muted"><%= listing.quantity %></small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  <% } %>
+</div>
