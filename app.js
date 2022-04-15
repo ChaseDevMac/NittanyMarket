@@ -9,6 +9,7 @@ const { sequelize } = require('./utils/database');
 const Category = require('./models/category');
 const ProductListing = require('./models/productlisting');
 const Review = require('./models/review');
+const Rating = require('./models/rating');
 
 const PORT = 8080;
 
@@ -81,8 +82,10 @@ app.get('/listing/:listingId', async (req, res) => {
   const { listingId } = req.params;
   const listing = await ProductListing.findByPk(listingId);
   const reviews = await Review.findAll({where: {listingId: listingId}});
+  const sellerRating = await Rating.findAll({where: {sellerEmail: listing.sellerEmail}, attributes: [[sequelize.fn('avg', sequelize.col('rating')), 'avgRating']]});
   res.locals.listing = listing;
   res.locals.reviews = reviews;
+  res.locals.sellerRating = sellerRating[0].dataValues.avgRating;
   res.render('marketplace/listings/show');
 });
 
