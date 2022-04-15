@@ -3,7 +3,8 @@
   <h1>Categories</h1>
   <ul>
   <% for (let category of categories) { %>
-  <li><a href="/marketplace/<%= category.child %>"><%= category.child %></a></li>
+  <div class="list-group mb-5">
+    <a href="/marketplace/<%= category.child %>" class="list-group-item list-group-item-action"><%= category.child %></a>
   <% } %>
   </ul>
 </div>

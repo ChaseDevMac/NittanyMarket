@@ -1,0 +1,22 @@
+<% layout('layouts/generic') %>
+<div class="col-10 offset-1">
+  <div class="row border">
+    <div class="col-8">
+      <h2 class="card-title"><%= listing.title %></h5>
+      <p>Seller: <%= listing.sellerEmail %></p>
+      <p>Description: <%= listing.productDesc %></p>
+      <p>Price: <%= listing.price %></p>
+      <p>In Stock: <%= listing.quantity %></p>
+      <p>Shop more listings in <a href="/marketplace/<%= listing.category %>"><%= listing.category %></a></p>
+    </div>
+    <div class="col-4">
+      <form class="d-inline" action="/orders/<%= listing._id %>" method="POST">
+        <div class="form-group mt-2 mb-2 col-3">
+          <label for="quantity">Quantity</label>
+          <input type="number" class="form-control" id="quantity" placeholder="1">
+        </div>
+        <button class="btn btn-primary">Add to cart</button>
+      </form>
+    </div>
+  </div>
+</div>

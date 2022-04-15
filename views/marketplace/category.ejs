@@ -11,6 +11,7 @@
     <% } %>
     </ol>
   </nav>
+
   <% if (childCategories.length !== 0) { %>
     <h2>Filter by Category</h2>
     <div class="list-group mb-5">
@@ -27,13 +28,9 @@
       <div class="row">
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title"><%= listing.title %></h5>
-            <p class="card-text"><%= listing.productName %></p>
+            <h5 class="card-title"><a href="/listing/<%= listing.listingId %>"><%= listing.title %></a></h5>
             <p class="card-text">
               <small class="text-muted"><%= listing.price %></small>
-            </p>
-            <p class="card-text">
-              <small class="text-muted"><%= listing.quantity %></small>
             </p>
           </div>
         </div>

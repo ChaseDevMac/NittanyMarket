@@ -8,11 +8,11 @@ ProductListing.init({
     type: DataTypes.STRING,
     field: 'seller_email',
     allowNull: false,
-    primaryKey: true,
   },
   listingId: {
     type: DataTypes.INTEGER,
     field: 'listing_id',
+    primaryKey: true,
     allowNull: false,
   },
   category: {

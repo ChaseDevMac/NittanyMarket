@@ -76,6 +76,14 @@ app.get('/marketplace/:category', async (req, res) => {
   res.render('marketplace/category');
 });
 
+app.get('/listing/:listingId', async (req, res) => {
+  const { listingId } = req.params;
+  const listing = await ProductListing.findByPk(listingId);
+  res.locals.listing = listing;
+  console.log(listing);
+  res.render('marketplace/listings/show');
+});
+
 app.listen(PORT, (err) => {
   try {
     console.log(`Listening on ${PORT}`);
