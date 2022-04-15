@@ -1,5 +1,5 @@
 <% layout('layouts/generic') %>
-<div class="col-10 offset-1">
+<div class="col-10 offset-1 mb-3">
   <div class="row border">
     <div class="col-8">
       <h2 class="card-title"><%= listing.title %></h5>
@@ -20,3 +20,24 @@
     </div>
   </div>
 </div>
+
+
+<div class="col-10 offset-1">
+    <h2>Reviews</h2>
+    <% if (reviews) { %>
+      <% for (let review of reviews) {%>
+        <div class="card mb-3">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title"><%= review.desc %></h5>
+                <h6 class="card-subtitle mb-2 text-muted">By: <%= review.buyerEmail %></h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</div>
+

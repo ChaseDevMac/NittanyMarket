@@ -8,6 +8,7 @@ const { sequelize } = require('./utils/database');
 
 const Category = require('./models/category');
 const ProductListing = require('./models/productlisting');
+const Review = require('./models/review');
 
 const PORT = 8080;
 
@@ -79,8 +80,9 @@ app.get('/marketplace/:category', async (req, res) => {
 app.get('/listing/:listingId', async (req, res) => {
   const { listingId } = req.params;
   const listing = await ProductListing.findByPk(listingId);
+  const reviews = await Review.findAll({where: {listingId: listingId}});
   res.locals.listing = listing;
-  console.log(listing);
+  res.locals.reviews = reviews;
   res.render('marketplace/listings/show');
 });
 
