@@ -11,10 +11,10 @@
       <p>Shop more listings in <a href="/marketplace/<%= listing.category %>"><%= listing.category %></a></p>
     </div>
     <div class="col-4">
-      <form class="d-inline" action="/orders/<%= listing._id %>" method="POST">
-        <div class="form-group mt-2 mb-2 col-3">
-          <label for="quantity">Quantity</label>
-          <input type="number" class="form-control" id="quantity" placeholder="1">
+      <form action="/orders/<%= listing._id %>" method="POST">
+        <div class="form-input mt-2 mb-2 col-3">
+          <label class="form-label" for="quantity">Quantity</label>
+          <input type="text" class="form-control" id="quantity" name="quantity" placeholder="1">
         </div>
         <button class="btn btn-primary">Add to cart</button>
       </form>

@@ -1,11 +1,13 @@
 <% layout('layouts/generic') %>
-<div class="col-6 offset-3">
-  <h1>Categories</h1>
-  <ul>
-  <% for (let category of categories) { %>
-  <div class="list-group mb-5">
-    <a href="/marketplace/<%= category.child %>" class="list-group-item list-group-item-action"><%= category.child %></a>
+<div class="container">
+  <% if (categories.length !== 0) { %>
+    <h2>Shop by Category</h2>
+    <div class="row gy-3 gx-3 px-2">
+    <% for (let category of categories) { %>
+      <div class="list-group col-sm-6 col-md-4 col-lg-3">
+        <a href="/marketplace/<%= category.child %>#" class="list-group-item list-group-item-action"><%= category.child %></a>
+      </div>
+    <% } %>
+    </div>
   <% } %>
-  </ul>
 </div>
-

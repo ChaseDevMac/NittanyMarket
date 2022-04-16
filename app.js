@@ -69,7 +69,9 @@ app.get('/marketplace/:category', async (req, res) => {
   const listings = await ProductListing.findAll({where: {category: category, [Op.and]: {quantity: {[Op.gt]: 0 }}}});
   const parentCategories = [];
   for (let parent of parentCategoriesQuery) {
-    parentCategories.push(parent.dataValues.cate_name);
+    if (parent.dataValues.cate_name !== 'Root') {
+      parentCategories.push(parent.dataValues.cate_name);
+    }
   }
   res.locals.parentCategories = parentCategories.reverse();
   res.locals.childCategories = childCategories;

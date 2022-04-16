@@ -1,41 +1,52 @@
 <% layout('layouts/generic') %>
-<div class="col-8 offset-2">
+<div class="container">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-5">
+    <li class="breadcrumb-item"><a class="text-decoration-none" href="/marketplace">Home</a></li>
     <% for (let i = 0; i < parentCategories.length; i++) { %>
       <% if (i === parentCategories.length - 1) { %>
         <li class="breadcrumb-item active"><%= parentCategories[i] %></li>
       <% } else { %>
-        <li class="breadcrumb-item"><a href="/marketplace/<%= parentCategories[i] %>"><%= parentCategories[i] %></a></li>
+        <li class="breadcrumb-item">
+          <a class="text-decoration-none" href="/marketplace/<%= parentCategories[i] %>"><%= parentCategories[i] %></a>
+        </li>
       <% } %>
     <% } %>
     </ol>
   </nav>
+</div>
 
+<div class="container mb-5">
   <% if (childCategories.length !== 0) { %>
-    <h2>Filter by Category</h2>
-    <div class="list-group mb-5">
-      <% for (let child of childCategories) { %>
+    <h2>Filter by Subcategory</h2>
+    <div class="row gy-3 gx-3 px-2">
+    <% for (let child of childCategories) { %>
+      <div class="list-group col-sm-6 col-md-4 col-lg-3">
         <a href="/marketplace/<%= child.child %>#" class="list-group-item list-group-item-action"><%= child.child %></a>
-      <% } %>
+      </div>
+    <% } %>
     </div>
   <% } %>
+</div>
 
+<div class="container mb-5">
   <% if (listings.length !== 0) { %>
     <h2>Shop <%= currCategory %></h2>
-    <% for (let listing of listings) { %>
-    <div class="card mb-3">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title"><a href="/listing/<%= listing.listingId %>"><%= listing.title %></a></h5>
-            <p class="card-text">
-              <small class="text-muted"><%= listing.price %></small>
-            </p>
+    <div class="row gy-3 px-2">
+      <% for (let listing of listings) { %>
+      <div class="card mx-auto col-sm-6 col-md-4 col-lg-3">
+        <a class="text-decoration-none" href="/listing/<%= listing.listingId %>">
+          <div class="row">
+            <div class="card-body">
+              <h5 class="card-title"> <%= listing.title %> </h5>
+              <p class="card-text">
+                <small class="text-muted"><%= listing.price %></small>
+              </p>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
+      <% } %>
     </div>
-    <% } %>
   <% } %>
 </div>
