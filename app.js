@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 
 const db = require('./utils/database');
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
+const mynmRoutes = require('./routes/mynm');
 
 app.get('/', (req, res) => {
   res.render('home');
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 
 //routes
 app.use('/', authRoutes);
-app.use('/', userRoutes);
+app.use('/mynm', mynmRoutes);
 
 app.get('/marketplace', async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});

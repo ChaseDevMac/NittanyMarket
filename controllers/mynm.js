@@ -90,11 +90,11 @@ module.exports.logout = (req, res) => {
 };
 
 module.exports.account = (req, res) => {
-  res.render('users/account');
+  res.render('mynm/account');
 };
 
 module.exports.changePasswordForm = (req, res) => {
-  res.render('users/change_password');
+  res.render('mynm/change_password');
 };
 
 module.exports.changePassword = (req, res) => {
@@ -104,17 +104,17 @@ module.exports.changePassword = (req, res) => {
 };
 
 module.exports.viewProfile = (req, res) => {
-  res.render('users/profile');
+  res.render('mynm/profile');
 };
 
 module.exports.viewOrders = (req, res) => {
-  res.render('users/orders');
+  res.render('mynm/orders');
 };
 
 module.exports.viewAddresses = (req, res) => {
-  res.render('users/addresses');
+  res.render('mynm/addresses');
 };
 
 module.exports.viewCards = (req, res) => {
-  res.render('users/cards');
+  res.render('mynm/cards');
 };
