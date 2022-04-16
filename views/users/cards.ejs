@@ -1,11 +1,16 @@
 <% layout('layouts/generic') %>
 <div class="col-6 offset-3">
-  <h1>My Cards</h1>
-  <ul>
-    <li>Holder: <%= card.first_name %> <%= card.last_name %></li>
-    <li>CCN: <%= card.ccn %></li>
-    <li>Brand: <%= card.brand %></li>
-    <li>Expiration Date: <%= card.exp_month %>/<%= card.exp_year %></li>
-  </ul>
+  <h1>Payment Cards</h1>
+  <div class="card mb-3">
+    <div class="row">
+      <div class="col-8">
+        <div class="card-body">
+          <h5 class="card-title">Holder: <%= card.first_name %> <%= card.last_name %></h5>
+          <h6 class="card-subtitle mb-2">CCN: <%= card.ccn %></h6>
+          <h6 class="card-subtitle mb-2">Brand: <%= card.brand %></h6>
+          <h6 class="card-subtitle mb-2">Expiration Date: <%= card.exp_month %>/<%= card.exp_year %></h6>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-

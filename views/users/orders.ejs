@@ -1,13 +1,18 @@
 <% layout('layouts/generic') %>
-<div class="col-6 offset-3">
-  <h1>My Orders</h1>
+<div class="col-md-8 col-lg-10 mx-auto">
+  <h1>Order History</h1>
   <% for (let order of orders) { %>
-    <ul>
-      <li>Seller Email: <%= order.seller_email %></li>
-      <li>Order Date: <%= order.order_date %></li>
-      <li>Quantity: <%= order.quantity %></li>
-      <li>Cost: $<%= order.payment %></li>
-    </ul>
+  <div class="row mb-3 g-0 position-relative border">
+    <div class="col-9 p-4">
+      <h6 class="card-subtitle mb-2">Seller Email: <%= order.seller_email %></h6>
+      <h6 class="card-subtitle mb-2">Order Date: <%= order.order_date %></h6>
+      <h6 class="card-subtitle mb-2">Quantity: <%= order.quantity %></h6>
+      <h6 class="card-subtitle mb-2">Cost: $<%= order.payment %></h6>
+    </div>
+    <div class="col-3 p-4 ps-0">
+      <a class="btn btn-primary m-2" href="">Rate Seller</a>
+      <a class="btn btn-primary m-2" href="">Review Product</a>
+    </div>
+  </div>
   <% } %>
 </div>
-

@@ -1,13 +1,17 @@
 <% layout('layouts/generic') %>
 <div class="col-6 offset-3">
-  <h1>My Profile</h1>
-  <ul>
-    <li>Name: <%= profile.firstName %> <%= profile.lastName %></li>
-    <li>Email: <%= profile.email %> </li>
-    <li>Age: <%= profile.age %></li>
-    <li>Gender: <%= profile.gender %></li>
-    <li><a href="/change_password">Change my password</a></li>
-  </ul>
+  <h1>Personal Information</h1>
+  <div class="card mb-3">
+    <div class="row">
+      <div class="col-8">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2">Name: <%= profile.firstName %> <%= profile.lastName %></h6>
+          <h6 class="card-subtitle mb-2">Email: <%= profile.email %></h6>
+          <h6 class="card-subtitle mb-2">Age: <%= profile.age %></h6>
+          <h6 class="card-subtitle mb-2">Gender: <%= profile.gender %></h6>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="btn btn-primary" href="/change_password">Change Password</a>
 </div>
-
-
