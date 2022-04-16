@@ -13,7 +13,7 @@ module.exports.validateLogin = async function (req, res, next) {
 };
 
 module.exports.loginForm = (req, res) => {
-  res.render('users/login');
+  res.render('auth/login');
 };
 
 module.exports.login = (req, res) => {
@@ -22,7 +22,7 @@ module.exports.login = (req, res) => {
 };
 
 module.exports.registerForm = (req, res) => {
-  res.render('users/register');
+  res.render('auth/register');
 };
 
 module.exports.register = async (req, res) => {
