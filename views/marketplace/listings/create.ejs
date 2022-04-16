@@ -1,0 +1,43 @@
+<% layout('layouts/generic') %>
+<div class="row">
+  <div class="col-8 mx-auto">
+    <form class="row g-3 validate-form" action="/listing" method="POST" novalidate>
+      <h1>Create A Listing</h1>
+      <div class="col-md-12">
+        <label for="title" class="form-label">Listing Title</label>
+        <input type="text" class="form-control" id="title" name="listing[title]" required>
+      </div>
+      <div class="col-md-6">
+        <label for="name" class="form-label">Product Name</label>
+        <input type="text" class="form-control" id="name" name="listing[name]" required>
+      </div>
+      <div class="col-md-6">
+        <label for="category" class="form-label">Category</label>
+        <select id="category" name="listing[category]" class="form-select">
+          <option selected>Choose...</option>
+          <% for (let category of categories) { %>
+          <option selected><%= category %></option>
+          <% } %>
+        </select>
+      </div>
+      <div class="col-12">
+        <label for="desc" class="form-label">Description</label>
+        <textarea class="form-control" type="text" id="desc" name="listing[desc]" required></textarea>
+      </div>
+      <div class="col-6">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="text" class="form-control" id="quantity" name="listing[quantity]" required>
+      </div>
+      <div class="col-6 mb-3">
+        <label for="price" class="form-label">Price</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" id="price" name="listing[price]" placeholder="0.00" aria-label="Amount (to the nearest dollar)" required>
+        </div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Post Listing</button>
+      </div>
+    </form>
+  </div>
+</div>

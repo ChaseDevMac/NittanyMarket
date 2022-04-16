@@ -80,6 +80,38 @@ app.get('/marketplace/:category', async (req, res) => {
   res.render('marketplace/category');
 });
 
+app.get('/listing/create', async (req, res) => {
+  const categories = await Category.findAll();
+  const allCategories = [];
+  for (let category of categories) {
+    categoryName = category.dataValues.child;
+    if (categoryName !== 'Root') {
+      allCategories.push(categoryName);
+    }
+  }
+  res.locals.categories = allCategories.sort();
+  res.render('marketplace/listings/create');
+});
+
+app.post('/listing', async (req, res) => {
+  const sellerEmail = req.session.email;
+  const listing = req.body.listing;
+  const listingId = Math.floor(Math.random() * 11111111);
+  console.log(sellerEmail);
+  console.log(listingId);
+  const newListing = await ProductListing.create({
+    sellerEmail,
+    listingId,
+    title: listing.title,
+    category: listing.category,
+    productName: listing.name,
+    productDesc: listing.desc,
+    price: listing.price,
+    quantity: listing.quantity,
+  });
+  res.redirect(`/listing/${newListing.listingId}`);
+});
+
 app.get('/listing/:listingId', async (req, res) => {
   const { listingId } = req.params;
   const listing = await ProductListing.findByPk(listingId);
