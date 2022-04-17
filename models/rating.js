@@ -7,18 +7,17 @@ Rating.init({
   buyerEmail: {
     type: DataTypes.STRING,
     field: 'buyer_email',
-    allowNull: false,
     primaryKey: true,
   },
   sellerEmail: {
     type: DataTypes.STRING,
     field: 'seller_email',
-    allowNull: false,
+    primaryKey: true,
   },
   rateDate: {
     type: DataTypes.STRING,
     field: 'rate_date',
-    allowNull: false,
+    primaryKey: true,
   },
   rating: {
     type: DataTypes.INTEGER,
@@ -33,9 +32,8 @@ Rating.init({
 {
   sequelize,
   modelName: 'Rating',
+  tableName: 'Ratings',
   timestamps: false
 });
 
 module.exports = Rating;
-
-

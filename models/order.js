@@ -17,7 +17,7 @@ Order.init({
   listingId: {
     type: DataTypes.INTEGER,
     field: 'listing_id',
-    allowNull: true,
+    allowNull: false,
   },
   buyerEmail: {
     type: DataTypes.STRING,
@@ -41,6 +41,7 @@ Order.init({
 {
   sequelize,
   modelName: 'Order',
+  tableName: 'Orders',
   timestamps: false,
 });
 

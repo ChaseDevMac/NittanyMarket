@@ -52,14 +52,22 @@ module.exports.getOrders = async function (req, res, next) {
 module.exports.getAddresses = async function (req, res, next) {
   try {
     const email = req.session.email;
-    const query = `SELECT B.first_name, B.last_name, A.street_num, A.street_name, A.zipcode, Z.city, Z.state_id 
-                       FROM Addresses A, Buyers B, ZipcodeInfo Z 
-                       WHERE B.email='${email}' 
+    const query = `SELECT B.first_name, B.last_name, A.street_num, A.street_name, A.zipcode, Z.city, Z.state_id
+                       FROM Addresses A, Buyers B, ZipcodeInfo Z
+                       WHERE B.email='${email}'
                        AND A.zipcode = Z.zipcode\n AND `;
     const homeAddr = await sequelize.query(query + 'A.addr_id = B.home_addr_id'); 
     const billingAddr = await sequelize.query(query + 'A.addr_id = B.billing_addr_id');
     res.locals.homeAddr = homeAddr[0][0];
     res.locals.billingAddr = billingAddr[0][0];
+    // const addrTest = await Address.findAll({
+    //   include: [{
+    //     model: Buyer,
+    //     required: true,
+    //     where: {email: email}
+    //   }]
+    // });
+    console.log(addrTest);
   } catch (err) {
     console.log(err);
   }

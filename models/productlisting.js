@@ -7,13 +7,12 @@ ProductListing.init({
   sellerEmail: {
     type: DataTypes.STRING,
     field: 'seller_email',
-    allowNull: false,
+    primaryKey: true,
   },
   listingId: {
     type: DataTypes.INTEGER,
     field: 'listing_id',
     primaryKey: true,
-    allowNull: false,
   },
   category: {
     type: DataTypes.STRING,
@@ -29,7 +28,7 @@ ProductListing.init({
     allowNull: false,
   },
   productDesc: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     field: 'product_desc',
     allowNull: false,
   },
@@ -45,10 +44,8 @@ ProductListing.init({
 {
   sequelize,
   modelName: 'ProductListing',
+  tableName: 'ProductListings',
   timestamps: false
 });
 
 module.exports = ProductListing;
-
-
-

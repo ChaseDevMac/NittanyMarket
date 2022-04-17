@@ -7,7 +7,6 @@ Category.init({
   child: {
     type: DataTypes.STRING,
     field: 'cate_name',
-    allowNull: false,
     primaryKey: true,
   },
   parent: {
@@ -19,9 +18,8 @@ Category.init({
 {
   sequelize,
   modelName: 'Category',
+  tableName: 'Categories',
   timestamps: false
 });
 
 module.exports = Category;
-
-

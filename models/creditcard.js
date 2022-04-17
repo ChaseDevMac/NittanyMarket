@@ -1,34 +1,41 @@
 const { sequelize } = require('../utils/database');
 const { DataTypes, Model } = require('sequelize');
 
-class Address extends Model {}
+class CreditCard extends Model {}
 
-Address.init({
-  addrId: {
+CreditCard.init({
+  ccn: {
     type: DataTypes.STRING,
-    field: 'addr_id',
     primaryKey: true,
   },
-  zipcode: {
+  ccv: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  streetNum: {
+  expMonth: {
     type: DataTypes.INTEGER,
-    field: 'street_num',
+    field: 'exp_month',
     allowNull: false,
   },
-  streetName: {
+  expYear: {
+    type: DataTypes.INTEGER,
+    field: 'exp_year',
+    allowNull: false,
+  },
+  brand: {
     type: DataTypes.STRING,
-    field: 'street_name',
+    allowNull: false,
+  },
+  owner: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 },
 {
   sequelize,
-  modelName: 'Address',
-  tableName: 'Addresses',
+  modelName: 'CreditCard',
+  tableName: 'CreditCards',
   timestamps: false,
 });
 
-module.exports = Address;
+module.exports = CreditCard;

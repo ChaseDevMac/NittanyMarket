@@ -1,16 +1,11 @@
 const { sequelize } = require('../utils/database');
 const { DataTypes, Model } = require('sequelize');
 
-class User extends Model {
-  static validPassword() {
-    console.log('Test');
-  }
-}
+class User extends Model {}
 
 User.init({
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
     primaryKey: true,
   },
   password: {
@@ -21,6 +16,7 @@ User.init({
 {
   sequelize,
   modelName: 'User',
+  tableName: 'Users',
   timestamps: false
 });
 
