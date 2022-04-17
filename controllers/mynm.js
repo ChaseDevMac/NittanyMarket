@@ -41,8 +41,7 @@ module.exports.getProfile = async function (req, res, next) {
 module.exports.getOrders = async function (req, res, next) {
   try {
     const buyerEmail = req.session.email;
-    const query = `SELECT * FROM Orders WHERE buyer_email = '${buyerEmail}'`;
-    const orders = await sequelize.query(query, {model: Order});
+    const orders = await Order.findAll({where: {buyerEmail: buyerEmail}, order: [['orderDate', 'DESC']]});
     res.locals.orders = orders;
   } catch (err) {
     console.log(err);

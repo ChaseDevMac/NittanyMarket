@@ -4,24 +4,29 @@ const { DataTypes, Model } = require('sequelize');
 class Order extends Model {}
 
 Order.init({
-  transaction_id: {
+  transactionId: {
     type: DataTypes.INTEGER,
-    allowNull: true,
+    field: 'transaction_id',
+    primaryKey: true,
   },
-  seller_email: {
+  sellerEmail: {
     type: DataTypes.STRING,
+    field: 'seller_email',
     allowNull: false,
   },
-  listing_id: {
+  listingId: {
     type: DataTypes.INTEGER,
+    field: 'listing_id',
     allowNull: true,
   },
-  buyer_email: {
+  buyerEmail: {
     type: DataTypes.STRING,
+    field: 'buyer_email',
     allowNull: false,
   },
-  order_date: {
-    type: DataTypes.STRING,
+  orderDate: {
+    type: DataTypes.DATE,
+    field: 'order_date',
     allowNull: false,
   },
   quantity: {
