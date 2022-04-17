@@ -39,6 +39,7 @@ app.use((req, res, next) => {
 const db = require('./utils/database');
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
+const listingRoutes = require('./routes/listing');
 // const dateify = require('./utils/dateify');
 // dateify.dateifyOrders();
 // const { testModels } = require('./utils/test_models');
@@ -51,6 +52,7 @@ app.get('/', (req, res) => {
 //routes
 app.use('/', authRoutes);
 app.use('/mynm', mynmRoutes);
+app.use('/listings', listingRoutes);
 
 app.get('/marketplace', async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
@@ -83,47 +85,6 @@ app.get('/marketplace/:category', async (req, res) => {
   res.render('marketplace/show');
 });
 
-app.get('/listings/create', async (req, res) => {
-  const categories = await Category.findAll();
-  const allCategories = [];
-  for (let category of categories) {
-    categoryName = category.dataValues.child;
-    if (categoryName !== 'Root') {
-      allCategories.push(categoryName);
-    }
-  }
-  res.locals.categories = allCategories.sort();
-  res.render('listings/create');
-});
-
-app.post('/listings', async (req, res) => {
-  const sellerEmail = req.session.email;
-  const listing = req.body.listing;
-  const listingId = Math.floor(Math.random() * 11111111);
-  const newListing = await ProductListing.create({
-    sellerEmail,
-    listingId,
-    title: listing.title,
-    category: listing.category,
-    productName: listing.name,
-    productDesc: listing.desc,
-    price: listing.price,
-    quantity: listing.quantity,
-    postDate: new Date().toISOString().slice(0,10),
-  });
-  res.redirect(`/listings/${newListing.listingId}`);
-});
-
-app.get('/listings/:listingId', async (req, res) => {
-  const { listingId } = req.params;
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
-  const reviews = await Review.findAll({where: {listingId: listingId}});
-  const sellerRating = await Rating.findAll({where: {sellerEmail: listing.sellerEmail}, attributes: [[sequelize.fn('avg', sequelize.col('rating')), 'avgRating']]});
-  res.locals.listing = listing;
-  res.locals.reviews = reviews;
-  res.locals.sellerRating = sellerRating[0].dataValues.avgRating;
-  res.render('listings/show');
-});
 
 app.listen(PORT, (err) => {
   try {
