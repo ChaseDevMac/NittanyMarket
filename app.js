@@ -55,7 +55,7 @@ app.use('/mynm', mynmRoutes);
 app.get('/marketplace', async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
   res.locals.categories = categories;
-  res.render('marketplace/root');
+  res.render('marketplace/index');
 });
 
 app.get('/marketplace/:category', async (req, res) => {
@@ -80,10 +80,10 @@ app.get('/marketplace/:category', async (req, res) => {
   res.locals.childCategories = childCategories;
   res.locals.listings = listings;
   res.locals.currCategory = category;
-  res.render('marketplace/category');
+  res.render('marketplace/show');
 });
 
-app.get('/listing/create', async (req, res) => {
+app.get('/listings/create', async (req, res) => {
   const categories = await Category.findAll();
   const allCategories = [];
   for (let category of categories) {
@@ -93,10 +93,10 @@ app.get('/listing/create', async (req, res) => {
     }
   }
   res.locals.categories = allCategories.sort();
-  res.render('marketplace/listings/create');
+  res.render('listings/create');
 });
 
-app.post('/listing', async (req, res) => {
+app.post('/listings', async (req, res) => {
   const sellerEmail = req.session.email;
   const listing = req.body.listing;
   const listingId = Math.floor(Math.random() * 11111111);
@@ -111,10 +111,10 @@ app.post('/listing', async (req, res) => {
     quantity: listing.quantity,
     postDate: new Date().toISOString().slice(0,10),
   });
-  res.redirect(`/listing/${newListing.listingId}`);
+  res.redirect(`/listings/${newListing.listingId}`);
 });
 
-app.get('/listing/:listingId', async (req, res) => {
+app.get('/listings/:listingId', async (req, res) => {
   const { listingId } = req.params;
   const listing = await ProductListing.findOne({where: {listingId: listingId}});
   const reviews = await Review.findAll({where: {listingId: listingId}});
@@ -122,7 +122,7 @@ app.get('/listing/:listingId', async (req, res) => {
   res.locals.listing = listing;
   res.locals.reviews = reviews;
   res.locals.sellerRating = sellerRating[0].dataValues.avgRating;
-  res.render('marketplace/listings/show');
+  res.render('listings/show');
 });
 
 app.listen(PORT, (err) => {
