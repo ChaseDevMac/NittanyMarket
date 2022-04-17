@@ -39,6 +39,8 @@ app.use((req, res, next) => {
 const db = require('./utils/database');
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
+// const dateify = require('./utils/dateify');
+// dateify.dateifyOrders();
 
 app.get('/', (req, res) => {
   res.render('home');
