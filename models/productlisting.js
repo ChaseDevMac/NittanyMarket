@@ -40,6 +40,14 @@ ProductListing.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  postDate: {
+    type: DataTypes.DATE,
+    field: 'post_date',
+  },
+  removeDate: {
+    type: DataTypes.DATE,
+    field: 'remove_date',
+  },
 }, 
 {
   sequelize,

@@ -109,6 +109,7 @@ app.post('/listing', async (req, res) => {
     productDesc: listing.desc,
     price: listing.price,
     quantity: listing.quantity,
+    postDate: new Date().toISOString().slice(0,10),
   });
   res.redirect(`/listing/${newListing.listingId}`);
 });

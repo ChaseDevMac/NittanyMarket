@@ -4,10 +4,13 @@
     <div class="col-8">
       <h2 class="card-title"><%= listing.title %></h5>
       <p>Seller: <%= listing.sellerEmail %></p>
-      <p>Rating: <%= sellerRating %></p>
+      <p>Rating: <%= sellerRating ? sellerRating : 'Unrated'%></p>
       <p>Description: <%= listing.productDesc %></p>
       <p>Price: <%= listing.price %></p>
       <p>In Stock: <%= listing.quantity %></p>
+      <% if (listing.postDate) { %>
+        <p>Posted on: <%= listing.postDate %></p>
+      <% } %>
       <p>Shop more listings in <a href="/marketplace/<%= listing.category %>"><%= listing.category %></a></p>
     </div>
     <div class="col-4">
