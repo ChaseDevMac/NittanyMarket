@@ -41,6 +41,8 @@ const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
 // const dateify = require('./utils/dateify');
 // dateify.dateifyOrders();
+// const { testModels } = require('./utils/test_models');
+// testModels();
 
 app.get('/', (req, res) => {
   res.render('home');
@@ -58,7 +60,6 @@ app.get('/marketplace', async (req, res) => {
 
 app.get('/marketplace/:category', async (req, res) => {
   const { category } = req.params;
-  // const parentCategories = await Category.findAll({where: {child: category}}, {include: {all: true, nested: true}});
   const parentCategoriesQuery = await sequelize.query(`WITH RECURSIVE Parents AS
     (SELECT * FROM Categories
     WHERE cate_name = '${category}'
@@ -99,8 +100,6 @@ app.post('/listing', async (req, res) => {
   const sellerEmail = req.session.email;
   const listing = req.body.listing;
   const listingId = Math.floor(Math.random() * 11111111);
-  console.log(sellerEmail);
-  console.log(listingId);
   const newListing = await ProductListing.create({
     sellerEmail,
     listingId,
@@ -116,7 +115,7 @@ app.post('/listing', async (req, res) => {
 
 app.get('/listing/:listingId', async (req, res) => {
   const { listingId } = req.params;
-  const listing = await ProductListing.findByPk(listingId);
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
   const reviews = await Review.findAll({where: {listingId: listingId}});
   const sellerRating = await Rating.findAll({where: {sellerEmail: listing.sellerEmail}, attributes: [[sequelize.fn('avg', sequelize.col('rating')), 'avgRating']]});
   res.locals.listing = listing;
