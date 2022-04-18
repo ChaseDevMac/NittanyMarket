@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const { sequelize } = require('../utils/database');
-const { Category, ProductListing } = require('../models/');
+const { Category, ProductListing, Seller, Rating } = require('../models/');
 
 module.exports.showIndex = async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
@@ -19,7 +19,13 @@ module.exports.showCategory = async (req, res) => {
     WHERE C.cate_name = P.parent_cate)
     SELECT * FROM Parents`, {model: Category});
   const childCategories = await Category.findAll({where: {parent: category}});
-  const listings = await ProductListing.findAll({where: {category: category, [Op.and]: {quantity: {[Op.gt]: 0 }}}});
+  const listings = await ProductListing.findAll({
+    where: {category: category, [Op.and]: {quantity: {[Op.gt]: 0 }}},
+    include: { 
+      model: Seller,
+      attributes: ['email'],
+    }
+  });
   const parentCategories = [];
   for (let parent of parentCategoriesQuery) {
     if (parent.dataValues.cate_name !== 'Root') {

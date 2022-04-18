@@ -52,6 +52,10 @@ Seller.belongsTo(User, {
   foreignKey: 'email',
   sourceKey: 'email',
 });
+Seller.hasMany(Rating, {
+  foreignKey: 'sellerEmail',
+  sourceKey: 'email',
+});
 
 // Category Associations
 Category.hasOne(Category, {
@@ -99,11 +103,11 @@ Review.hasOne(ProductListing, {
 });
 
 // Rating Associations
-Rating.hasOne(Buyer, {
+Rating.belongsTo(Buyer, {
   foreignKey: 'email',
   sourceKey: 'buyerEmail',
 });
-Rating.hasOne(Seller, {
+Rating.belongsTo(Seller, {
   foreignKey: 'email',
   sourceKey: 'sellerEmail',
 });
