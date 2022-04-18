@@ -31,11 +31,15 @@ module.exports.loginForm = (req, res) => {
 
 module.exports.login = async (req, res) => {
   const { email, password } = req.body.user;
-  if (!isValidLogin(email, password)) res.send('wrong email or password');
+  if (!await isValidLogin(email, password)) {
+    req.flash('error', 'Incorrect email address or password');
+    return res.redirect('/login');
+  }
   req.session.email = req.body.user.email;
 
   if (await isBuyer(email)) req.session.isBuyer = true;
   if (await isSeller(email)) req.session.isSeller = true;
+  req.flash('success', `Welcome back, ${email}!`);
   res.redirect('/');
 };
 

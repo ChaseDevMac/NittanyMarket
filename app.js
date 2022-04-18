@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const flash = require('connect-flash');
 const redis = require('redis');
 const redisClient = redis.createClient({ legacyMode: true });
 const redisStore = require('connect-redis')(session);
@@ -34,6 +35,7 @@ const sessionConfig = {
   },
 };
 app.use(session(sessionConfig));
+app.use(flash());
 
 // const {testModels} = require('./utils/test_models');
 // const { floatifyPrices } = require('./utils/floatify_prices');
@@ -47,6 +49,10 @@ app.get('/test', async (req, res) => {
 app.use(express.urlencoded({extended: true}));
 app.use((req, res, next) => {
   res.locals.user = req.session.email;
+  res.locals.isBuyer = req.session.isBuyer;
+  res.locals.isSeller = req.session.isSeller;
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 })
 
