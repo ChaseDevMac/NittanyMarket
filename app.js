@@ -20,6 +20,13 @@ const sessionConfig = {
   },
 };
 
+const {testModels} = require('./utils/test_models');
+app.get('/test', async (req, res) => {
+  const result = await testModels();
+  console.log(result);
+  res.send(result);
+})
+
 //Middleware
 app.use(express.urlencoded({extended: true}));
 app.use(session(sessionConfig));

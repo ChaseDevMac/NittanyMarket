@@ -42,7 +42,28 @@ module.exports.testModels = async function () {
         as: 'billAddress'
       }],
     });
-    console.log({reviews, orders, productListings, userSeller, seller, address, user, buyers})
+    const buyerInfo = await models.Buyer.findByPk('agoly4g@nsu.edu', {
+      attributes: ['firstName', 'lastName'],
+      include: [{
+        model: models.Address,
+        as: 'homeAddress',
+        attributes: ['streetNum', 'streetName'],
+        include: {
+          model: models.Zipcode,
+          attributes: ['zipcode', 'city', 'stateId']
+        }
+      }, { 
+        model: models.Address,
+        as: 'billAddress',
+        attributes: ['streetNum', 'streetName'],
+        include: {
+          model: models.Zipcode,
+          attributes: ['zipcode', 'city', 'stateId']
+        }
+      }]
+    });
+    // console.log({reviews, orders, productListings, userSeller, seller, address, user, buyers})
+    return buyerInfo;
   } catch (err) {
     console.log(err);
   }

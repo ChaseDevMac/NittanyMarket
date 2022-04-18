@@ -7,9 +7,9 @@
     <div class="row">
       <div class="col-8">
         <div class="card-body">
-          <h5 class="card-title"><%= homeAddr.first_name %> <%= homeAddr.last_name %></h5>
-          <h6 class="card-subtitle mb-2"><%= homeAddr.street_num %> <%= homeAddr.street_name %></h6>
-          <h6 class="card-subtitle mb-2"> <%= homeAddr.city %> <%= homeAddr.state_id %> <%= homeAddr.zipcode %></h6>
+          <h5 class="card-title"><%= homeAddr.name %></h5>
+          <h6 class="card-subtitle mb-2"><%= homeAddr.streetInfo %></h6>
+          <h6 class="card-subtitle mb-2"> <%= homeAddr.zipcodeInfo %></h6>
         </div>
       </div>
     </div>
@@ -20,9 +20,9 @@
     <div class="row">
       <div class="col-8">
         <div class="card-body">
-          <h5 class="card-title"><%= billingAddr.first_name %> <%= billingAddr.last_name %></h5>
-          <h6 class="card-subtitle mb-2"><%= billingAddr.street_num %> <%= billingAddr.street_name %></h6>
-          <h6 class="card-subtitle mb-2"><%= billingAddr.city %> <%= billingAddr.state_id %> <%= billingAddr.zipcode %></h6>
+          <h5 class="card-title"><%= billAddr.name %></h5>
+          <h6 class="card-subtitle mb-2"><%= billAddr.streetInfo %></h6>
+          <h6 class="card-subtitle mb-2"> <%= billAddr.zipcodeInfo %></h6>
         </div>
       </div>
     </div>

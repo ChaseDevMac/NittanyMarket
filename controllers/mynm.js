@@ -1,10 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const { sequelize } = require('../utils/database');
-const User = require('../models/user');
-const Buyer = require('../models/buyer');
-const Order = require('../models/order');
-const Address = require('../models/address');
+const { User, Buyer, Order, Address, Zipcode } = require('../models');
 
 module.exports.validatePasswordChange = async function (req, res, next) {
   const { password, 'conf-password': confPassword } = req.body.user;
@@ -16,13 +13,6 @@ module.exports.validatePasswordChange = async function (req, res, next) {
     await User.update({password: hashPassword}, {where: {email: req.session.email}});
   } catch (err) {
     console.log(err);
-  }
-  next();
-};
-
-module.exports.isLoggedIn = async function (req, res, next) {
-  if (!req.session.email) {
-    return res.redirect('/login');
   }
   next();
 };
@@ -49,30 +39,29 @@ module.exports.getOrders = async function (req, res, next) {
   next();
 };
 
-module.exports.getAddresses = async function (req, res, next) {
-  try {
-    const email = req.session.email;
-    const query = `SELECT B.first_name, B.last_name, A.street_num, A.street_name, A.zipcode, Z.city, Z.state_id
-                       FROM Addresses A, Buyers B, ZipcodeInfo Z
-                       WHERE B.email='${email}'
-                       AND A.zipcode = Z.zipcode\n AND `;
-    const homeAddr = await sequelize.query(query + 'A.addr_id = B.home_addr_id'); 
-    const billingAddr = await sequelize.query(query + 'A.addr_id = B.billing_addr_id');
-    res.locals.homeAddr = homeAddr[0][0];
-    res.locals.billingAddr = billingAddr[0][0];
-    // const addrTest = await Address.findAll({
-    //   include: [{
-    //     model: Buyer,
-    //     required: true,
-    //     where: {email: email}
-    //   }]
-    // });
-    console.log(addrTest);
-  } catch (err) {
-    console.log(err);
-  }
-  next();
-};
+async function getBuyerAddress(email) {
+  const result = await Buyer.findByPk(email, {
+    attributes: ['firstName', 'lastName'],
+    include: [{
+      model: Address,
+      as: 'homeAddress',
+      attributes: ['streetNum', 'streetName'],
+      include: {
+        model: Zipcode,
+        attributes: ['zipcode', 'city', 'stateId']
+      }
+    }, { 
+      model: Address,
+      as: 'billAddress',
+      attributes: ['streetNum', 'streetName'],
+      include: {
+        model: Zipcode,
+        attributes: ['zipcode', 'city', 'stateId']
+      }
+    }]
+  });
+  return result;
+}
 
 module.exports.getCreditCards = async function (req, res, next) {
   try {
@@ -118,7 +107,21 @@ module.exports.viewOrders = (req, res) => {
   res.render('mynm/orders');
 };
 
-module.exports.viewAddresses = (req, res) => {
+module.exports.viewAddresses = async (req, res) => {
+  const result = await getBuyerAddress(req.session.email);
+  // res.send(result.homeAddress);
+  const homeAddress = result.homeAddress;
+  const billAddress = result.billAddress;
+  res.locals.homeAddr = {
+    "name": `${result.firstName} ${result.lastName}`,
+    "streetInfo": `${homeAddress.streetNum} ${homeAddress.streetName}`,
+    "zipcodeInfo": `${homeAddress.Zipcode.zipcode} ${homeAddress.Zipcode.city} ${homeAddress.Zipcode.stateId}`
+  }
+  res.locals.billAddr = {
+    "name": `${result.firstName} ${result.lastName}`,
+    "streetInfo": `${billAddress.streetNum} ${billAddress.streetName}`,
+    "zipcodeInfo": `${billAddress.Zipcode.zipcode} ${billAddress.Zipcode.city} ${billAddress.Zipcode.stateId}`
+  }
   res.render('mynm/addresses');
 };
 
