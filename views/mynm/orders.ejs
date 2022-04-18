@@ -4,10 +4,13 @@
   <% for (let order of orders) { %>
   <div class="row mb-3 g-0 position-relative border">
     <div class="col-9 p-4">
+      <a class="text-decoration-none" href="/listings/<%= order.listingInfo.listingId %>">
+        <h5 class="card-title mb-2"><%= order.listingInfo.title %></h5>
+      </a>
       <h6 class="card-subtitle mb-2">Seller Email: <%= order.sellerEmail %></h6>
       <h6 class="card-subtitle mb-2">Order Date: <%= order.orderDate %></h6>
       <h6 class="card-subtitle mb-2">Quantity: <%= order.quantity %></h6>
-      <h6 class="card-subtitle mb-2">Cost: $<%= order.payment %></h6>
+      <h6 class="card-subtitle mb-2">Order Cost: $<%= order.payment %></h6>
     </div>
     <div class="col-3 p-4 ps-0">
       <a class="btn btn-primary m-2" href="">Rate Seller</a>

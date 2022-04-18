@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const { sequelize } = require('../utils/database');
-const { User, Buyer, Order, Address, Zipcode } = require('../models');
+const { User, Buyer, Order, Address, Zipcode, ProductListing } = require('../models');
 
 module.exports.validatePasswordChange = async function (req, res, next) {
   const { password, 'conf-password': confPassword } = req.body.user;
@@ -31,7 +31,24 @@ module.exports.getProfile = async function (req, res, next) {
 module.exports.getOrders = async function (req, res, next) {
   try {
     const buyerEmail = req.session.email;
-    const orders = await Order.findAll({where: {buyerEmail: buyerEmail}, order: [['orderDate', 'DESC']]});
+    const orders = await Order.findAll({
+      where: {buyerEmail: buyerEmail}, 
+      attributes: [
+        'sellerEmail',
+        'listingId',
+        'orderDate',
+        'quantity',
+        'payment',
+        // [sequelize.col('listingInfo.title'), 'title'],
+        // [sequelize.col('listingInfo.product_name'), 'productName'],
+      ],
+      order: [['orderDate', 'DESC']],
+      include: {
+        model: ProductListing,
+        as: 'listingInfo',
+        attributes: ['title', 'listingId'],
+      }
+    });
     res.locals.orders = orders;
   } catch (err) {
     console.log(err);
