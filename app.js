@@ -35,11 +35,12 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
-const {testModels} = require('./utils/test_models');
+// const {testModels} = require('./utils/test_models');
+// const { floatifyPrices } = require('./utils/floatify_prices');
 app.get('/test', async (req, res) => {
-  const result = await testModels();
-  console.log(result);
-  res.send(result);
+  // const result = await testModels();
+  // const result2 = await floatifyPrices();
+  // res.send(result2);
 })
 
 //Middleware
