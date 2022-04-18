@@ -1,23 +1,41 @@
-const User = require('../models/user');
+const { User, Buyer, Seller } = require('../models');
 const bcrypt = require('bcrypt');
 
-module.exports.validateLogin = async function (req, res, next) {
-  const { email, password } = req.body.user;
+async function isValidLogin (email, password) {
   const foundUser = await User.findByPk(email);
-  if (!foundUser)
-    return res.send('Wrong password or email');
+  if (!foundUser) return false;
+
   const comparePassword = bcrypt.compareSync(password, foundUser.password);
-  if (!comparePassword)
-    return res.send('Wrong password or email');
-  next();
+  if (!comparePassword) return false;
+
+  return true;
 };
+
+async function isBuyer(email) {
+  const foundBuyer = await Buyer.findByPk(email);
+  if (!foundBuyer) return false;
+
+  return true;
+}
+
+async function isSeller(email) {
+  const foundSeller = await Seller.findByPk(email);
+  if (!foundSeller) return false;
+
+  return true;
+}
 
 module.exports.loginForm = (req, res) => {
   res.render('auth/login');
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = async (req, res) => {
+  const { email, password } = req.body.user;
+  if (!isValidLogin(email, password)) res.send('wrong email or password');
   req.session.email = req.body.user.email;
+
+  if (await isBuyer(email)) req.session.isBuyer = true;
+  if (await isSeller(email)) req.session.isSeller = true;
   res.redirect('/');
 };
 

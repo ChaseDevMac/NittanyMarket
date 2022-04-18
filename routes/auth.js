@@ -5,7 +5,7 @@ const authCtrl = require('../controllers/auth');
 
 router.route('/login')
   .get(authCtrl.loginForm)
-  .post(authCtrl.validateLogin, authCtrl.login);
+  .post(authCtrl.login);
 
 router.route('/register')
   .get(authCtrl.registerForm)
