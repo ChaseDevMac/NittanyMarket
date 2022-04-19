@@ -2,22 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const mynmCtrl = require('../controllers/mynm');
-const midware = require('../middleware/users');
+const { requiresLogin } = require('../middleware/users');
 
-router.get('/logout', midware.isLoggedIn, mynmCtrl.logout);
+router.get('/logout', requiresLogin, mynmCtrl.logout);
 
-router.get('/', midware.isLoggedIn, mynmCtrl.account);
+router.get('/', requiresLogin, mynmCtrl.account);
 
-router.get('/change_password', midware.isLoggedIn, mynmCtrl.changePasswordForm);
+router.get('/change_password', requiresLogin, mynmCtrl.changePasswordForm);
 
-router.post('/change_password', midware.isLoggedIn, mynmCtrl.validatePasswordChange, mynmCtrl.changePassword);
+router.post('/change_password', requiresLogin, mynmCtrl.validatePasswordChange, mynmCtrl.changePassword);
 
-router.get('/profile', midware.isLoggedIn, mynmCtrl.getProfile, mynmCtrl.viewProfile);
+router.get('/profile', requiresLogin, mynmCtrl.getProfile, mynmCtrl.viewProfile);
 
-router.get('/orders', midware.isLoggedIn, mynmCtrl.getOrders, mynmCtrl.viewOrders);
+router.get('/orders', requiresLogin, mynmCtrl.getOrders, mynmCtrl.viewOrders);
 
-router.get('/addresses', midware.isLoggedIn, mynmCtrl.viewAddresses);
+router.get('/addresses', requiresLogin, mynmCtrl.viewAddresses);
 
-router.get('/cards', midware.isLoggedIn, mynmCtrl.getCreditCards, mynmCtrl.viewCards);
+router.get('/cards', requiresLogin, mynmCtrl.getCreditCards, mynmCtrl.viewCards);
 
 module.exports = router;

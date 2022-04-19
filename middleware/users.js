@@ -1,20 +1,30 @@
-module.exports.isLoggedIn = async function (req, res, next) {
+module.exports.requiresLogin = async function (req, res, next) {
   if (!req.session.email) {
+    req.flash('error', 'You must be logged in!');
     return res.redirect('/login');
   }
   next();
 };
 
-module.exports.isSeller = async function (req, res, next) {
-  if (!req.session.isSeller) {
-    return res.redirect('/marketplace');
+module.exports.isLoggedIn = async function (req, res, next) {
+  if (req.session.email) {
+    return res.redirect('/');
   }
   next();
 }
 
-module.exports.isBuyer = async function (req, res, next) {
+module.exports.requiresSeller = async function (req, res, next) {
+  if (!req.session.isSeller) {
+    req.flash('error', 'You need a seller account type!');
+    return res.redirect('/');
+  }
+  next();
+}
+
+module.exports.requiresBuyer = async function (req, res, next) {
   if (!req.session.isBuyer) {
-    return res.redirect('/marketplace');
+    req.flash('error', 'You need a buyer account type!');
+    return res.redirect('/');
   }
   next();
 }
