@@ -1,14 +1,20 @@
 <% layout('layouts/generic') %>
 <div class="col-6 offset-3">
-  <form class="row g-3 validate-form" action="/login" method="POST">
+  <form class="row g-3 validate-form" action="/login" method="POST" novalidate>
     <h1>Login</h1>
     <div class="col-md-12">
       <label for="email" class="form-label">Email</label>
-      <input type="text" class="form-control" id="email" name="user[email]">
+      <input type="email" class="form-control" id="email" name="user[email]" required>
+      <div class="invalid-feedback">
+        Please enter your email address
+      </div>
     </div>
     <div class="col-md-12">
       <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="user[password]">
+      <input type="password" class="form-control" id="password" name="user[password]" required>
+      <div class="invalid-feedback">
+        Please enter your password
+      </div>
     </div>
     <div class="col-12">
       <button class="btn btn-primary">Login</button>
@@ -18,5 +24,3 @@
     </div>
   </form> 
 </div>
-
-
