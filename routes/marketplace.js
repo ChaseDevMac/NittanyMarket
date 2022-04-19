@@ -5,6 +5,6 @@ const marketplaceCtrl = require('../controllers/marketplace');
 
 router.get('/', marketplaceCtrl.showIndex);
 
-router.get('/:category', marketplaceCtrl.showCategory);
+router.get('/:category', marketplaceCtrl.showCategoryListings);
 
 module.exports = router

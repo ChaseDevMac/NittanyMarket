@@ -4,11 +4,22 @@ const { Category, ProductListing, Seller, Rating } = require('../models/');
 
 module.exports.showIndex = async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
+
+  const recentListings = await ProductListing.findAll({
+    order: [['postDate', 'DESC']],
+    include: {
+      model: Seller,
+      attributes: ['email'],
+    },
+    limit: 20,
+  });
+
   res.locals.categories = categories;
+  res.locals.recentListings = recentListings;
   res.render('marketplace/index');
 }
 
-module.exports.showCategory = async (req, res) => {
+module.exports.showCategoryListings = async (req, res) => {
   const { category } = req.params;
   const parentCategoriesQuery = await sequelize.query(`WITH RECURSIVE Parents AS
     (SELECT * FROM Categories
@@ -21,7 +32,7 @@ module.exports.showCategory = async (req, res) => {
   const childCategories = await Category.findAll({where: {parent: category}});
   const listings = await ProductListing.findAll({
     where: {category: category, [Op.and]: {quantity: {[Op.gt]: 0 }}},
-    include: { 
+    include: {
       model: Seller,
       attributes: ['email'],
     }
