@@ -1,0 +1,21 @@
+<% layout('layouts/generic') %>
+<div class="col-10 offset-1 mb-3">
+  <h2>Rate <%= sellerEmail %></h2>
+  <form class="row g-3 validate-form my-2" action="/users/<%= sellerEmail %>/ratings" method="POST" novalidate>
+    <div class="col-6">
+      <label for="rating" class="form-label">Rating</label>
+      <input type="range" class="form-range" min="1" max="5" id="rating" name="rating[rating]">
+    </div>
+    <div class="col-12">
+      <label for="desc" class="form-label">Description</label>
+      <textarea class="form-control" type="text" id="desc" name="rating[desc]" required></textarea>
+      <div class="invalid-feedback">
+        Please enter a description
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+

@@ -13,7 +13,9 @@
       <h6 class="card-subtitle mb-2">Order Cost: $<%= order.payment %></h6>
     </div>
     <div class="col-3 p-4 ps-0">
-      <a class="btn btn-primary m-2" href="">Rate Seller</a>
+      <a class="btn btn-primary m-2" href="/users/<%= order.sellerEmail %>/ratings/create">
+        Rate Seller
+      </a>
       <a class="btn btn-primary m-2" href="/listings/<%= order.listingInfo.listingId %>/reviews/create">
         Review Product
       </a>

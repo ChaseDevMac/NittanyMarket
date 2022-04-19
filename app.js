@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const { ProductListing, Review } = require('./models');
+const { ProductListing, Review, Rating } = require('./models');
 
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
@@ -102,6 +102,30 @@ app.post('/listings/:listingId/reviews', async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+app.get('/users/:sellerEmail/ratings/create', (req, res) => {
+  res.locals.sellerEmail = req.params.sellerEmail;
+  res.render('ratings/create');
+});
+
+app.post('/users/:sellerEmail/ratings', async (req, res) => {
+  const buyerEmail = req.session.email;
+  const { sellerEmail } = req.params;
+  const { rating, desc } = req.body.rating;
+
+  try {
+    await Rating.create({
+      sellerEmail,
+      buyerEmail,
+      rating,
+      desc,
+      rateDate: new Date().toISOString().slice(0, 10),
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  res.redirect('/mynm/orders');
 });
 
 app.all('*', (req, res) => {
