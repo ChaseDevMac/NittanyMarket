@@ -1,0 +1,55 @@
+<% layout('layouts/generic') %>
+<div class="container col-10 mx-auto">
+  <h1>Checkout</h1>
+  <div class="container my-5">
+    <form action="/cart/checkout" method="POST">
+      <input type="hidden" name="listingId", value="<%= listing.listingId %>">
+      <input type="hidden" name="quantity", value="<%= quantity %>">
+      <input type="hidden" name="totalPrice", value="<%= totalPrice %>">
+      <div class="container mx-3">
+        <h4> Billing Address </h4>
+        <div class="form-check">
+          <label class="form-check-label" for="address">
+            <p style="white-space: pre-line"><%= buyerInfo.firstName %> <%= buyerInfo.lastName %>
+              <%= buyerInfo.billAddress.streetNum %> <%= buyerInfo.billAddress.streetName %>
+              <%= buyerInfo.billAddress.Zipcode.city %> <%= buyerInfo.billAddress.Zipcode.stateId %> <%= buyerInfo.billAddress.Zipcode.zipcode %>
+            </p>
+          </label>
+          <input class="form-check-input" type="radio" name="address" id="address">
+        </div>
+      </div>
+      <div class="container mx-3">
+        <h4> Payment Method </h4>
+        <div class="form-check">
+          <label class="form-check-label" for="payment">
+            <p style="white-space: pre-line"><%= buyerInfo.firstName %> <%= buyerInfo.lastName %>
+              <%= creditCard.brand %> ending in: <%= creditCard.ccn %>
+              expires: <%= creditCard.expMonth %> / <%= creditCard.expYear %>
+            </p>
+          </label>
+          <input class="form-check-input" type="radio" name="payment" id="payment">
+        </div>
+      </div>
+      <div class="container mt-3">
+        <h4> Total: $<%= totalPrice %></h4>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Checkout</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="container">
+    <h3> Order Summary </h3>
+    <div class="col-9 mb-3">
+      <div class="row border p-3">
+        <div class="col-8">
+          <h5 class="card-title"><%= listing.title %></h5>
+          <p>$<%= listing.price %></p>
+        </div>
+        <div class="col-3">
+          <p>Quantity: <%= quantity %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

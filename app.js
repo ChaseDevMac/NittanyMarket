@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const { ProductListing, Review, Rating } = require('./models');
+const { Order, ProductListing, Review, Rating, Address, Buyer, Zipcode, CreditCard } = require('./models');
 
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
@@ -138,8 +138,67 @@ app.get('/cart', async (req, res) => {
   res.render('cart/index');
 });
 
+async function getFullBuyerInfo(email) {
+  const result = await Buyer.findByPk(email, {
+    attributes: ['firstName', 'lastName'],
+    include: [{
+      model: Address,
+      as: 'homeAddress',
+      attributes: ['streetNum', 'streetName'],
+      include: {
+        model: Zipcode,
+        attributes: ['zipcode', 'city', 'stateId']
+      }
+    }, { 
+      model: Address,
+      as: 'billAddress',
+      attributes: ['streetNum', 'streetName'],
+      include: {
+        model: Zipcode,
+        attributes: ['zipcode', 'city', 'stateId']
+      }
+    }]
+  });
+  return result;
+}
+
 app.get('/cart/checkout', async (req, res) => {
-  res.send('ok');
+  const { listingId, quantity, totalPrice } = req.query;
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+
+  const email = req.session.email;
+  const buyerInfo = await getFullBuyerInfo(email);
+  const creditCard = await CreditCard.findOne({where: {owner: email}});
+  creditCard.dataValues.ccn = '****' + creditCard.dataValues.ccn.slice(-4);
+
+  res.locals.listing = listing;
+  res.locals.totalPrice = totalPrice;
+  res.locals.quantity = quantity;
+  res.locals.creditCard = creditCard;
+  res.locals.buyerInfo = buyerInfo;
+  res.render('cart/checkout');
+});
+
+app.post('/cart/checkout', async (req, res) =>{
+  const buyerEmail = req.session.email;
+  const { listingId, quantity, totalPrice } = req.body;
+  const transactionId = Math.floor(Math.random() * 1111111111);
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+  const newStock = listing.quantity - quantity;
+
+  await Order.create({
+    transactionId,
+    sellerEmail: listing.sellerEmail,
+    listingId,
+    buyerEmail,
+    quantity,
+    payment: totalPrice,
+    orderDate: new Date().toISOString().slice(0, 10),
+  });
+
+  await ProductListing.update({quantity: newStock}, {where: {listingId: listingId}});
+  req.flash('success', 'Your order has been placed!');
+  res.redirect('/mynm/orders');
 });
 
 app.all('*', (req, res) => {
