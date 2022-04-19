@@ -6,7 +6,7 @@
       <p>Seller: <%= listing.sellerEmail %></p>
       <p>Rating: <%= sellerRating ? sellerRating : 'Unrated'%></p>
       <p>Description: <%= listing.productDesc %></p>
-      <p>Price: <%= listing.price %></p>
+      <p>Price: $<%= listing.price %></p>
       <p>In Stock: <%= listing.quantity %></p>
       <% if (listing.postDate) { %>
         <p>Posted on: <%= listing.postDate %></p>
@@ -14,7 +14,8 @@
       <p>Shop more listings in <a href="/marketplace/<%= listing.category %>"><%= listing.category %></a></p>
     </div>
     <div class="col-4">
-      <form action="/orders/<%= listing._id %>" method="POST">
+      <form action="/cart" method="GET">
+        <input type="hidden" name="listingId", value="<%= listing.listingId %>">
         <div class="form-input mt-2 mb-2 col-3">
           <label class="form-label" for="quantity">Quantity</label>
           <input type="text" class="form-control" id="quantity" name="quantity" placeholder="1">

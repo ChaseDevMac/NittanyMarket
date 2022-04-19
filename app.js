@@ -128,6 +128,20 @@ app.post('/users/:sellerEmail/ratings', async (req, res) => {
   res.redirect('/mynm/orders');
 });
 
+app.get('/cart', async (req, res) => {
+  const { listingId, quantity } = req.query;
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+
+  res.locals.listing = listing;
+  res.locals.quantity = quantity;
+  res.locals.totalPrice = listing.price * quantity;
+  res.render('cart/index');
+});
+
+app.get('/cart/checkout', async (req, res) => {
+  res.send('ok');
+});
+
 app.all('*', (req, res) => {
   res.render('not_found');
 });
