@@ -1,0 +1,16 @@
+<% layout('layouts/generic') %>
+<div class="col-10 offset-1 mb-3">
+  <h2>Write a review for <%= listing.title %></h2>
+  <form class="row g-3 validate-form" action="/listings/<%= listing.listingId %>/reviews" method="POST" novalidate>
+    <div class="col-12">
+      <label for="desc" class="form-label">Description</label>
+      <textarea class="form-control" type="text" id="desc" name="review[desc]" required></textarea>
+      <div class="invalid-feedback">
+        Please enter a description
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>

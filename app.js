@@ -55,7 +55,9 @@ app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
-})
+});
+
+const { ProductListing, Review } = require('./models');
 
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
@@ -70,6 +72,33 @@ app.use('/marketplace', marketplaceRoutes);
 
 app.get('/', (req, res) => {
   res.render('home');
+});
+
+app.get('/listings/:listingId/reviews/create', async (req, res) => {
+  const { listingId } = req.params;
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+  res.locals.listing = listing;
+  console.log(listing.title);
+  res.render('reviews/create');
+});
+
+app.post('/listings/:listingId/reviews', async (req, res) => {
+  const email = req.session.email;
+  const { listingId } = req.params;
+  const { desc } = req.body.review;
+
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+  try {
+    await Review.create({
+      sellerEmail: listing.sellerEmail,
+      buyerEmail: email,
+      listingId,
+      desc,
+    });
+    res.redirect(`/listings/${listingId}`);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.all('*', (req, res) => {
