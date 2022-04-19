@@ -72,6 +72,10 @@ app.get('/', (req, res) => {
   res.render('home');
 });
 
+app.all('*', (req, res) => {
+  res.render('not_found');
+});
+
 app.listen(PORT, (err) => {
   try {
     console.log(`Listening on ${PORT}`);
