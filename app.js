@@ -40,7 +40,10 @@ app.use(flash());
 
 // const {testModels} = require('./utils/test_models');
 // const { floatifyPrices } = require('./utils/floatify_prices');
+// const { dateifyRatings } = require('./utils/dateify');
 app.get('/test', async (req, res) => {
+  // await dateifyRatings();
+  res.send('ok')
   // const result = await testModels();
   // const result2 = await floatifyPrices();
   // res.send(result2);
