@@ -2,25 +2,25 @@
 <div class="container">
   <div class="col-8 mb-3">
     <h2>Shopping Cart</h2>
-    <div class="row border">
-      <div class="col-8">
-        <h5 class="card-title"><%= listing.title %></h5>
+    <% for (let cartItem of cartItems) { %>
+      <div class="row border m-2 p-3">
+        <div class="col-8">
+          <h5 class="card-title"><%= cartItem.title %></h5>
+        </div>
+        <div class="col-4">
+          <p>Price: $<%= cartItem.price %></p>
+          <p>Quantity: <%= cartItem.quantity %></p>
+        </div>
       </div>
-      <div class="col-4">
-        <p>Price: $<%= listing.price %></p>
-        <p>Quantity: <%= quantity %></p>
-      </div>
+    <% } %>
     </div>
-  </div>
   <div>
     <h2> Total: $<%= totalPrice %></h2>
   </div>
   <div>
     <form action="/cart/checkout" method="GET">
-      <input type="hidden" name="listingId", value="<%= listing.listingId %>">
-      <input type="hidden" name="quantity", value="<%= quantity %>">
-      <input type="hidden" name="totalPrice", value="<%= totalPrice %>">
       <div class="col-12">
+        <input type="hidden" name="totalPrice", value="<%= totalPrice %>">
         <button type="submit" class="btn btn-primary">Checkout</button>
       </div>
     </form>

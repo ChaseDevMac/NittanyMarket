@@ -10,6 +10,8 @@ const ProductListing = require('./productlisting');
 const Order = require('./order');
 const Review = require('./review');
 const Rating = require('./rating');
+const Cart = require('./cart');
+const CartItem = require('./cartitem');
 
 // User Associations
 User.hasOne(Buyer, {
@@ -112,6 +114,17 @@ Rating.belongsTo(Seller, {
   sourceKey: 'sellerEmail',
 });
 
+// Cart Associations
+Cart.hasMany(CartItem, {
+  foreignKey: 'cartId',
+  sourceKey: 'cartId',
+});
+
+// CartItem Associations
+CartItem.hasOne(ProductListing, {
+  foreignKey: 'listingId',
+  sourceKey: 'listingId',
+});
 
 module.exports = {
   User,

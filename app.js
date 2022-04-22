@@ -7,6 +7,8 @@ const flash = require('connect-flash');
 const redis = require('redis');
 const redisClient = redis.createClient({ legacyMode: true });
 const redisStore = require('connect-redis')(session);
+const { v4: uuidv4 } = require('uuid');
+const { Op } = require('sequelize');
 redisClient.connect();
 
 const PORT = 8080;
@@ -61,11 +63,14 @@ app.use((req, res, next) => {
 });
 
 const { Order, ProductListing, Review, Rating, Address, Buyer, Zipcode, CreditCard } = require('./models');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cartitem');
 
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
 const listingRoutes = require('./routes/listing');
 const marketplaceRoutes = require('./routes/marketplace');
+const { sequelize } = require('./utils/database');
 
 //routes
 app.use('/', authRoutes);
@@ -128,14 +133,81 @@ app.post('/users/:sellerEmail/ratings', async (req, res) => {
   res.redirect('/mynm/orders');
 });
 
-app.get('/cart', async (req, res) => {
-  const { listingId, quantity } = req.query;
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+app.post('/cart', async (req, res) => {
+  const email = req.session.email;
+  const listingId = req.body.listingId;
+  const quantity = req.body.quantity;
+  try {
+    const listing = await ProductListing.findOne({where: {listingId}});
+    let foundCart = await Cart.findOne({where: {email}});
+    if (!foundCart) foundCart = await Cart.create({ cartId: uuidv4(), email});
 
-  res.locals.listing = listing;
-  res.locals.quantity = quantity;
-  res.locals.totalPrice = listing.price * quantity;
-  res.render('cart/index');
+    const foundCartItem = await CartItem.findOne({
+      where: {
+        [Op.and]: [
+          {listingId},
+          {cartId: foundCart.cartId}
+        ]
+      }
+    });
+    if (!foundCartItem) {
+      await CartItem.create({
+        cartId: foundCart.cartId,
+        listingId,
+        sellerEmail: listing.sellerEmail,
+        quantity,
+      });
+    } else {
+      console.log('cartItem', typeof(foundCartItem.dataValues.quantity));
+      console.log('Quantity:', typeof(quantity));
+      const updatedQty = foundCartItem.dataValues.quantity + quantity;
+      CartItem.update({quantity: updatedQty}, {
+        where: {
+          [Op.and] : [
+            { cartId: foundCart.dataValues.cartId },
+            { listingId }
+          ]
+        }
+      });
+    }
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+  }
+})
+
+app.get('/cart', async (req, res) => {
+  const email = req.session.email;
+  try {
+    const foundCart = await Cart.findOne({
+      where: {email},
+      include: {
+        model: CartItem,
+        attributes: [
+          'quantity',
+        ],
+        include: {
+          model: ProductListing,
+        }
+      }
+    });
+    const cartItems = []
+    let totalPrice = 0
+    for (let cartItem of foundCart.CartItems) {
+      console.log(cartItem.quantity)
+      cartItems.push({
+        quantity: cartItem.quantity,
+        title: cartItem.ProductListing.title,
+        price: cartItem.ProductListing.price,
+      });
+      totalPrice += cartItem.ProductListing.price * cartItem.quantity;
+    }
+    res.locals.cartItems = cartItems;
+    res.locals.totalPrice = totalPrice;
+    res.render('cart/index');
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 async function getFullBuyerInfo(email) {
@@ -163,17 +235,12 @@ async function getFullBuyerInfo(email) {
 }
 
 app.get('/cart/checkout', async (req, res) => {
-  const { listingId, quantity, totalPrice } = req.query;
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
-
   const email = req.session.email;
   const buyerInfo = await getFullBuyerInfo(email);
   const creditCard = await CreditCard.findOne({where: {owner: email}});
   creditCard.dataValues.ccn = '****' + creditCard.dataValues.ccn.slice(-4);
 
-  res.locals.listing = listing;
-  res.locals.totalPrice = totalPrice;
-  res.locals.quantity = quantity;
+  res.locals.totalPrice = req.query.totalPrice;
   res.locals.creditCard = creditCard;
   res.locals.buyerInfo = buyerInfo;
   res.render('cart/checkout');
