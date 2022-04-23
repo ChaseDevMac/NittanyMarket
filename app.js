@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -16,6 +17,7 @@ const PORT = 8080;
 app.engine('html', ejsMate);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 redisClient.on('error', (err) => {

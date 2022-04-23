@@ -20,4 +20,6 @@ router.get('/addresses', requiresLogin, mynmCtrl.viewAddresses);
 
 router.get('/cards', requiresLogin, mynmCtrl.getCreditCards, mynmCtrl.viewCards);
 
+router.get('/listings', requiresLogin, mynmCtrl.viewListings);
+
 module.exports = router;

@@ -163,3 +163,10 @@ module.exports.viewAddresses = async (req, res) => {
 module.exports.viewCards = (req, res) => {
   res.render('mynm/cards');
 };
+
+module.exports.viewListings = async (req, res) => {
+  const email = req.session.email;
+  const listings = await ProductListing.findAll({where: {sellerEmail: email}});
+  res.locals.listings = listings;
+  res.render('mynm/listings');
+};
