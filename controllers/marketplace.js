@@ -4,7 +4,10 @@ const { Category, ProductListing, Seller, Rating } = require('../models/');
 
 module.exports.showIndex = async (req, res) => {
   const recentListings = await ProductListing.findAll({
-    where: {quantity: {[Op.gt]: 0 }},
+    where: {
+      quantity: {[Op.gt]: 0 },
+      removeDate: {[Op.is]: null},
+    },
     order: [['postDate', 'DESC']],
     include: {
       model: Seller,
