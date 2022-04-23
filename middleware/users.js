@@ -1,6 +1,6 @@
 module.exports.requiresLogin = async function (req, res, next) {
   if (!req.session.email) {
-    req.flash('error', 'You must be logged in!');
+    req.session.returnTo = req.originalUrl;
     return res.redirect('/login');
   }
   next();

@@ -40,7 +40,9 @@ module.exports.login = async (req, res) => {
   if (await isBuyer(email)) req.session.isBuyer = true;
   if (await isSeller(email)) req.session.isSeller = true;
   req.flash('success', `Welcome back, ${email}!`);
-  res.redirect('/');
+  const redirectUrl = req.session.returnTo || '/';
+  delete req.session.returnTo;
+  res.redirect(redirectUrl);
 };
 
 module.exports.registerForm = (req, res) => {

@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const cartCtrl = require('../controllers/cart');
+const userMidware = require('../middleware/users');
 
 router.route('/')
-  .get(cartCtrl.showCart)
-  .post(cartCtrl.addToCart);
+  .get(userMidware.requiresLogin, cartCtrl.showCart)
+  .post(userMidware.requiresLogin, cartCtrl.addToCart);
 
 router.route('/checkout')
-  .get(cartCtrl.showCheckout)
-  .post(cartCtrl.checkout);
+  .get(userMidware.requiresLogin, cartCtrl.showCheckout)
+  .post(userMidware.requiresLogin, cartCtrl.checkout);
 
 module.exports = router;
