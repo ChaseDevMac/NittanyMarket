@@ -1,0 +1,45 @@
+<% layout('layouts/generic') %>
+<div class="col-10 mx-auto">
+  <h1> <%= user %> </h1>
+  <h4>
+    <% if (sellerRating) { %>
+      <%= sellerRating %>★
+    <% } else { %>
+      Unrated
+    <% } %>
+  </h4>
+
+  <div class="container my-5">
+    <% if (ratings.length !== 0) { %>
+      <h2>What customers are saying</h2>
+      <div class="row mt-2 gy-3 px-2">
+        <% for (let rating of ratings) { %>
+          <div class="card col-sm-6 col-md-4 col-lg-3 p-3">
+            <h5 class="card-title"> <%= rating.desc %> </h5>
+            <%= rating.rating %> ★
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="container my-5">
+    <% if (listings.length !== 0) { %>
+      <h2>Listings from <%= user %></h2>
+      <div class="row mt-2 gy-3 px-2">
+        <% for (let listing of listings) { %>
+          <div class="card col-sm-6 col-md-4 col-lg-3">
+            <a class="text-decoration-none" href="/listings/<%= listing.listingId %>">
+              <div class="row">
+                <div class="card-body">
+                  <h5 class="card-title"> <%= listing.title %> </h5>
+                  <h6 class="card-text text-dark">$<%= listing.price %></h6>
+                </div>
+              </div>
+            </a>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>

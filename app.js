@@ -56,6 +56,7 @@ const reviewRoutes = require('./routes/review');
 const ratingRoutes = require('./routes/rating');
 const marketplaceRoutes = require('./routes/marketplace');
 const cartRoutes = require('./routes/cart');
+const userRoutes = require('./routes/user');
 
 //routes
 app.use('/', authRoutes);
@@ -65,6 +66,7 @@ app.use('/marketplace', marketplaceRoutes);
 app.use('/listings/:listingId/reviews', reviewRoutes);
 app.use('/users/:sellerEmail/ratings', ratingRoutes);
 app.use('/cart', cartRoutes);
+app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.render('home');
