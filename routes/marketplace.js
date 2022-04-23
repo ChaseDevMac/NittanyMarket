@@ -9,4 +9,6 @@ router.get('/search', marketplaceCtrl.searchIndex);
 
 router.get('/:category', marketplaceCtrl.showCategoryListings);
 
+router.get('/:category/search', marketplaceCtrl.searchCategoryListings);
+
 module.exports = router;

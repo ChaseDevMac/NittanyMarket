@@ -17,6 +17,13 @@
 </div>
 
 <div class="container mb-5">
+  <form class="d-flex mb-5 mt-3" action="/marketplace/<%= currCategory %>/search" method="GET">
+    <input class="form-control me-2" type="search" name="q" placeholder="Search <%= currCategory %> Listings" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+</div>
+
+<div class="container mb-5">
   <% if (childCategories.length !== 0) { %>
     <h2>Filter by Subcategory</h2>
     <div class="row gy-3 gx-3 px-2">

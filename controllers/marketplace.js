@@ -52,7 +52,6 @@ module.exports.showCategoryListings = async (req, res) => {
 
 module.exports.searchIndex = async (req, res) => {
   const { q } = req.query;
-  console.log(q);
   const queryListings = await ProductListing.findAll({
     where: {
       title: { [Op.substring]: q },
@@ -69,3 +68,40 @@ module.exports.searchIndex = async (req, res) => {
   res.locals.categories = await Category.findAll({where: {parent: 'Root'}});
   res.render('marketplace/index');
 };
+
+module.exports.searchCategoryListings = async (req, res) => {
+  const { category } = req.params;
+  const { q } = req.query;
+  const parentCategoriesQuery = await sequelize.query(`WITH RECURSIVE Parents AS
+    (SELECT * FROM Categories
+    WHERE cate_name = '${category}'
+    UNION
+    SELECT C.*
+    FROM Categories C, Parents P
+    WHERE C.cate_name = P.parent_cate)
+    SELECT * FROM Parents`, {model: Category});
+  const childCategories = await Category.findAll({where: {parent: category}});
+  const listings = await ProductListing.findAll({
+    where: {
+      title: { [Op.substring]: q },
+      quantity: {[Op.gt]: 0 },
+      removeDate: {[Op.is]: null},
+      category,
+    },
+    include: {
+      model: Seller,
+      attributes: ['email'],
+    },
+  });
+  const parentCategories = [];
+  for (let parent of parentCategoriesQuery) {
+    if (parent.dataValues.cate_name !== 'Root') {
+      parentCategories.push(parent.dataValues.cate_name);
+    }
+  }
+  res.locals.parentCategories = parentCategories.reverse();
+  res.locals.childCategories = childCategories;
+  res.locals.listings = listings;
+  res.locals.currCategory = category;
+  res.render('marketplace/show');
+}
