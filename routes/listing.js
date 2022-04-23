@@ -10,6 +10,9 @@ router.post('/', requiresSeller, listingCtrl.createListing);
 
 router.route('/:listingId')
   .get(listingCtrl.showListing)
+  .put(listingCtrl.editListing)
   .delete(listingCtrl.deleteListing);
+
+router.get('/:listingId/edit', requiresSeller, listingCtrl.renderEditForm);
 
 module.exports = router;

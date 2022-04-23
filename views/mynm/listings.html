@@ -15,9 +15,7 @@
         <form action="/listings/<%= listing.listingId %>?_method=DELETE" method="POST">
           <input class="btn btn-danger" type="submit" name="removeListing" value="Remove Listing">
         </form>
-        <form action="/listings/<%= listing.listingId %>?_method=PUT" method="POST">
-          <input class="btn btn-info" type="submit" name="removeListing" value="Edit Listing">
-        </form>
+        <a class="btn btn-info" href="/listings/<%= listing.listingId %>/edit">Edit Listing</a>
       <% } %>
     </div>
   </div>

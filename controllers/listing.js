@@ -53,3 +53,22 @@ module.exports.deleteListing = async (req, res) => {
   await listing.update({removeDate: new Date().toISOString().replace('T', ' ')});
   res.redirect('/mynm/listings');
 }
+
+module.exports.renderEditForm = async (req, res) => {
+  res.locals.listing = await ProductListing.findOne({where: {listingId: req.params.listingId}});
+  res.render('listings/edit');
+}
+
+module.exports.editListing = async (req, res) => {
+  const { listingId } = req.params;
+  const editListing = req.body.listing;
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+  await listing.update({
+    title: editListing.title,
+    productName: editListing.name,
+    productDesc: editListing.desc,
+    quantity: editListing.quantity,
+    price: editListing.price
+  });
+  res.redirect(`/listings/${listingId}`);
+}

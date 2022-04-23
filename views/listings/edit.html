@@ -1,0 +1,56 @@
+<% layout('layouts/generic') %>
+<div class="row">
+  <div class="col-8 mx-auto">
+    <form class="row g-3 validate-form" action="/listings/<%= listing.listingId %>?_method=PUT" method="POST" novalidate>
+      <h1>Create A Listing</h1>
+      <div class="col-md-12">
+        <label for="title" class="form-label">Listing Title</label>
+        <input type="text" class="form-control" id="title" name="listing[title]" value="<%= listing.title %>" required>
+        <div class="invalid-feedback">
+          Please enter a title for the listing
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="name" class="form-label">Product Name</label>
+        <input type="text" class="form-control" id="name" name="listing[name]" value="<%= listing.productName %>" required>
+        <div class="invalid-feedback">
+          Please enter the name of the product
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="category" class="form-label">Category</label>
+        <select id="category" name="listing[category]" class="form-select" readonly>
+          <option selected><%= listing.category %></option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label for="desc" class="form-label">Description</label>
+        <textarea class="form-control" type="text" id="desc" name="listing[desc]" required><%= listing.productDesc %></textarea>
+        <div class="invalid-feedback">
+          Please enter a description
+        </div>
+      </div>
+      <div class="col-6">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" class="form-control" id="quantity" name="listing[quantity]" value="<%= listing.quantity %>" required>
+        <div class="invalid-feedback">
+          Please enter a quantity amount
+        </div>
+      </div>
+      <div class="col-6 mb-3">
+        <label for="price" class="form-label">Unit Price</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <input type="number" class="form-control" id="price" name="listing[price]" value="<%= listing.price %>" placeholder="0.00" aria-label="Amount (to the nearest dollar)" required>
+          <div class="invalid-feedback">
+            Please enter a valid price
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-5">
+        <button type="submit" class="btn btn-primary">Edit Listing</button>
+      </div>
+    </form>
+  </div>
+</div>
+
