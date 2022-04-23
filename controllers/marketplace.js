@@ -6,6 +6,7 @@ module.exports.showIndex = async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
 
   const recentListings = await ProductListing.findAll({
+    where: {quantity: {[Op.gt]: 0 }},
     order: [['postDate', 'DESC']],
     include: {
       model: Seller,
