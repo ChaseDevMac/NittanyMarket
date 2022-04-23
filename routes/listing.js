@@ -8,6 +8,8 @@ router.get('/create', requiresSeller, listingCtrl.renderListingForm);
 
 router.post('/', requiresSeller, listingCtrl.createListing);
 
-router.get('/:listingId', listingCtrl.showListing);
+router.route('/:listingId')
+  .get(listingCtrl.showListing)
+  .delete(listingCtrl.deleteListing);
 
 module.exports = router;

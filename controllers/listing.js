@@ -46,3 +46,10 @@ module.exports.showListing = async (req, res) => {
   res.locals.sellerRating = sellerRating[0].dataValues.avgRating;
   res.render('listings/show');
 }
+
+module.exports.deleteListing = async (req, res) => {
+  const { listingId } = req.params;
+  const listing = await ProductListing.findOne({where: {listingId: listingId}});
+  await listing.update({removeDate: new Date().toISOString().replace('T', ' ')});
+  res.redirect('/mynm/listings');
+}
