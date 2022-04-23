@@ -8,7 +8,11 @@
           <%= listing.sellerEmail %>
         </a>
       </p>
-      <p>Rating: <%= sellerRating ? sellerRating : 'Unrated'%></p>
+      <p><% if (sellerRating) { %>
+        <%= sellerRating %>★
+      <% } else { %>
+        Unrated
+      <% } %></p>
       <p>Description: <%= listing.productDesc %></p>
       <p>Price: $<%= listing.price %></p>
       <p>In Stock: <%= listing.quantity %></p>
