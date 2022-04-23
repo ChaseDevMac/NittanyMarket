@@ -49,6 +49,10 @@ module.exports.getOrders = async function (req, res, next) {
         attributes: ['title', 'listingId'],
       }
     });
+    for (let order of orders) {
+      const fmtDate = order.orderDate.toISOString().slice(0, 10);
+      order.fmtDate = fmtDate;
+    }
     res.locals.orders = orders;
   } catch (err) {
     console.log(err);

@@ -86,7 +86,6 @@ app.get('/listings/:listingId/reviews/create', async (req, res) => {
   const { listingId } = req.params;
   const listing = await ProductListing.findOne({where: {listingId: listingId}});
   res.locals.listing = listing;
-  console.log(listing.title);
   res.render('reviews/create');
 });
 
@@ -158,8 +157,6 @@ app.post('/cart', async (req, res) => {
         quantity,
       });
     } else {
-      console.log('cartItem', typeof(foundCartItem.dataValues.quantity));
-      console.log('Quantity:', typeof(quantity));
       const updatedQty = foundCartItem.dataValues.quantity + quantity;
       CartItem.update({quantity: updatedQty}, {
         where: {
@@ -194,7 +191,6 @@ app.get('/cart', async (req, res) => {
     const cartItems = []
     let totalPrice = 0
     for (let cartItem of foundCart.CartItems) {
-      console.log(cartItem.quantity)
       cartItems.push({
         quantity: cartItem.quantity,
         title: cartItem.ProductListing.title,
