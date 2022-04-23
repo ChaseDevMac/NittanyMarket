@@ -9,6 +9,8 @@ const redisClient = redis.createClient({ legacyMode: true });
 const redisStore = require('connect-redis')(session);
 redisClient.connect();
 
+const { Category } = require('./models');
+
 const PORT = 8080;
 
 app.engine('html', ejsMate);
@@ -68,7 +70,9 @@ app.use('/users/:sellerEmail/ratings', ratingRoutes);
 app.use('/cart', cartRoutes);
 app.use('/users', userRoutes);
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  const categories = await Category.findAll({where: {parent: 'Root'}});
+  res.locals.categories = categories;
   res.render('home');
 });
 
