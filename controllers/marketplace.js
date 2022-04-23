@@ -3,8 +3,6 @@ const { sequelize } = require('../utils/database');
 const { Category, ProductListing, Seller, Rating } = require('../models/');
 
 module.exports.showIndex = async (req, res) => {
-  const categories = await Category.findAll({where: {parent: 'Root'}});
-
   const recentListings = await ProductListing.findAll({
     where: {quantity: {[Op.gt]: 0 }},
     order: [['postDate', 'DESC']],
@@ -15,8 +13,9 @@ module.exports.showIndex = async (req, res) => {
     limit: 20,
   });
 
-  res.locals.categories = categories;
-  res.locals.recentListings = recentListings;
+  res.locals.categories = await Category.findAll({where: {parent: 'Root'}});
+  res.locals.listings = recentListings;
+  res.locals.listingsType = 'Recently Posted';
   res.render('marketplace/index');
 }
 
@@ -50,3 +49,23 @@ module.exports.showCategoryListings = async (req, res) => {
   res.locals.currCategory = category;
   res.render('marketplace/show');
 }
+
+module.exports.searchIndex = async (req, res) => {
+  const { q } = req.query;
+  console.log(q);
+  const queryListings = await ProductListing.findAll({
+    where: {
+      title: { [Op.substring]: q },
+      quantity: {[Op.gt]: 0 },
+      removeDate: {[Op.is]: null},
+    },
+    include: {
+      model: Seller,
+      attributes: ['email'],
+    },
+  });
+  res.locals.listings = queryListings;
+  res.locals.listingsType = q;
+  res.locals.categories = await Category.findAll({where: {parent: 'Root'}});
+  res.render('marketplace/index');
+};
