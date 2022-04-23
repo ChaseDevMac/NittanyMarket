@@ -248,22 +248,38 @@ app.get('/cart/checkout', async (req, res) => {
 
 app.post('/cart/checkout', async (req, res) =>{
   const buyerEmail = req.session.email;
-  const { listingId, quantity, totalPrice } = req.body;
-  const transactionId = Math.floor(Math.random() * 1111111111);
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
-  const newStock = listing.quantity - quantity;
-
-  await Order.create({
-    transactionId,
-    sellerEmail: listing.sellerEmail,
-    listingId,
-    buyerEmail,
-    quantity,
-    payment: totalPrice,
-    orderDate: new Date().toISOString().slice(0, 10),
+  const foundCart = await Cart.findOne({
+    where: {email: buyerEmail},
+    include: {
+      model: CartItem,
+      include: { model: ProductListing }
+    },
   });
+  try {
+    for (let cartItem of foundCart.CartItems) {
+      const transactionId = Math.floor(Math.random() * 1111111111);
+      const listing = cartItem.ProductListing;
+      const newStock = listing.quantity - cartItem.quantity;
 
-  await ProductListing.update({quantity: newStock}, {where: {listingId: listingId}});
+      await Order.create({
+        transactionId,
+        sellerEmail: listing.sellerEmail,
+        listingId: cartItem.listingId,
+        buyerEmail,
+        quantity: cartItem.quantity,
+        payment: listing.price * cartItem.quantity,
+        orderDate: new Date().toISOString().replace('T', ' '),
+      });
+
+      await listing.update({quantity: newStock});
+      await listing.save();
+
+      await cartItem.destroy();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
   req.flash('success', 'Your order has been placed!');
   res.redirect('/mynm/orders');
 });
