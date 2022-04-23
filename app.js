@@ -70,6 +70,7 @@ const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
 const listingRoutes = require('./routes/listing');
 const reviewRoutes = require('./routes/review');
+const ratingRoutes = require('./routes/rating');
 const marketplaceRoutes = require('./routes/marketplace');
 const { sequelize } = require('./utils/database');
 
@@ -79,34 +80,10 @@ app.use('/mynm', mynmRoutes);
 app.use('/listings', listingRoutes);
 app.use('/marketplace', marketplaceRoutes);
 app.use('/listings/:listingId/reviews', reviewRoutes);
+app.use('/users/:sellerEmail/ratings', ratingRoutes);
 
 app.get('/', (req, res) => {
   res.render('home');
-});
-
-
-app.get('/users/:sellerEmail/ratings/create', (req, res) => {
-  res.locals.sellerEmail = req.params.sellerEmail;
-  res.render('ratings/create');
-});
-
-app.post('/users/:sellerEmail/ratings', async (req, res) => {
-  const buyerEmail = req.session.email;
-  const { sellerEmail } = req.params;
-  const { rating, desc } = req.body.rating;
-
-  try {
-    await Rating.create({
-      sellerEmail,
-      buyerEmail,
-      rating,
-      desc,
-      rateDate: new Date().toISOString().slice(0, 10),
-    });
-  } catch (err) {
-    console.log(err);
-  }
-  res.redirect('/mynm/orders');
 });
 
 app.post('/cart', async (req, res) => {
