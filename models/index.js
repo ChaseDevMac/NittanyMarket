@@ -143,4 +143,6 @@ module.exports = {
   Order,
   Review,
   Rating,
+  Cart,
+  CartItem,
 };

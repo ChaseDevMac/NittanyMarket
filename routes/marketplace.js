@@ -7,4 +7,4 @@ router.get('/', marketplaceCtrl.showIndex);
 
 router.get('/:category', marketplaceCtrl.showCategoryListings);
 
-module.exports = router
+module.exports = router;
