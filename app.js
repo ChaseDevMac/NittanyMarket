@@ -69,6 +69,7 @@ const CartItem = require('./models/cartitem');
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
 const listingRoutes = require('./routes/listing');
+const reviewRoutes = require('./routes/review');
 const marketplaceRoutes = require('./routes/marketplace');
 const { sequelize } = require('./utils/database');
 
@@ -77,36 +78,12 @@ app.use('/', authRoutes);
 app.use('/mynm', mynmRoutes);
 app.use('/listings', listingRoutes);
 app.use('/marketplace', marketplaceRoutes);
+app.use('/listings/:listingId/reviews', reviewRoutes);
 
 app.get('/', (req, res) => {
   res.render('home');
 });
 
-app.get('/listings/:listingId/reviews/create', async (req, res) => {
-  const { listingId } = req.params;
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
-  res.locals.listing = listing;
-  res.render('reviews/create');
-});
-
-app.post('/listings/:listingId/reviews', async (req, res) => {
-  const email = req.session.email;
-  const { listingId } = req.params;
-  const { desc } = req.body.review;
-
-  const listing = await ProductListing.findOne({where: {listingId: listingId}});
-  try {
-    await Review.create({
-      sellerEmail: listing.sellerEmail,
-      buyerEmail: email,
-      listingId,
-      desc,
-    });
-    res.redirect(`/listings/${listingId}`);
-  } catch (err) {
-    console.log(err);
-  }
-});
 
 app.get('/users/:sellerEmail/ratings/create', (req, res) => {
   res.locals.sellerEmail = req.params.sellerEmail;
