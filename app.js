@@ -11,10 +11,10 @@ redisClient.connect();
 
 const PORT = 8080;
 
-app.set('view engine', 'ejs');
+app.engine('html', ejsMate);
+app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.engine('ejs', ejsMate);
 
 redisClient.on('error', (err) => {
   console.log('Redis Error: ', err);
