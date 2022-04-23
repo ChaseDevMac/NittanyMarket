@@ -7,7 +7,11 @@
       <a class="text-decoration-none" href="/listings/<%= order.listingInfo.listingId %>">
         <h5 class="card-title mb-2"><%= order.listingInfo.title %></h5>
       </a>
-      <h6 class="card-subtitle mb-2">Seller Email: <%= order.sellerEmail %></h6>
+      <h6 class="card-subtitle mb-2">Seller Email: 
+        <a class="text-decoration-none" href="/users/<%= order.sellerEmail %>">
+          <%= order.sellerEmail %>
+        </a>
+      </h6>
       <h6 class="card-subtitle mb-2">Order Date: <%= order.fmtDate %></h6>
       <h6 class="card-subtitle mb-2">Quantity: <%= order.quantity %></h6>
       <h6 class="card-subtitle mb-2">Order Cost: $<%= order.payment %></h6>

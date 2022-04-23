@@ -3,7 +3,11 @@
   <div class="row border">
     <div class="col-8">
       <h2 class="card-title"><%= listing.title %></h5>
-      <p>Seller: <%= listing.sellerEmail %></p>
+      <p>Seller: 
+        <a class="text-decoration-none" href="/users/<%= listing.sellerEmail %>">
+          <%= listing.sellerEmail %>
+        </a>
+      </p>
       <p>Rating: <%= sellerRating ? sellerRating : 'Unrated'%></p>
       <p>Description: <%= listing.productDesc %></p>
       <p>Price: $<%= listing.price %></p>
@@ -11,7 +15,11 @@
       <% if (listing.postDate) { %>
         <p>Posted on: <%= listing.postDate %></p>
       <% } %>
-      <p>Shop more listings in <a href="/marketplace/<%= listing.category %>"><%= listing.category %></a></p>
+      <p>Shop more listings in 
+        <a class="text-decoration-none" href="/marketplace/<%= listing.category %>">
+          <%= listing.category %>
+        </a>
+      </p>
     </div>
     <div class="col-4">
       <form action="/cart" method="POST">
