@@ -74,6 +74,10 @@ ProductListing.hasOne(Category, {
   foreignKey: 'cate_name',
   sourceKey: 'category',
 });
+ProductListing.hasMany(Review, {
+  foreignKey: 'listingId',
+  sourceKey: 'listingId',
+})
 
 // Order Associations
 Order.hasOne(Seller, {
@@ -99,20 +103,20 @@ Review.hasOne(Seller, {
   foreignKey: 'email',
   sourceKey: 'sellerEmail',
 });
-Review.hasOne(ProductListing, {
+Review.belongsTo(ProductListing, {
   foreignKey: 'listingId',
   sourceKey: 'listingId',
 });
 
 // Rating Associations
-Rating.belongsTo(Buyer, {
-  foreignKey: 'email',
-  sourceKey: 'buyerEmail',
-});
-Rating.belongsTo(Seller, {
-  foreignKey: 'email',
-  sourceKey: 'sellerEmail',
-});
+// Rating.belongsTo(Buyer, {
+//   foreignKey: 'email',
+//   sourceKey: 'buyerEmail',
+// });
+// Rating.belongsTo(Seller, {
+//   foreignKey: 'email',
+//   sourceKey: 'sellerEmail',
+// });
 
 // Cart Associations
 Cart.hasMany(CartItem, {

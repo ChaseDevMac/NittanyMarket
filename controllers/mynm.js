@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const { sequelize } = require('../utils/database');
-const { User, Buyer, Order, Address, Zipcode, ProductListing } = require('../models');
+const { User, Buyer, Order, Address, Zipcode, ProductListing, Review, Rating } = require('../models');
 
 module.exports.validatePasswordChange = async function (req, res, next) {
   const { password, 'conf-password': confPassword } = req.body.user;
@@ -39,21 +39,35 @@ module.exports.getOrders = async function (req, res, next) {
         'orderDate',
         'quantity',
         'payment',
-        // [sequelize.col('listingInfo.title'), 'title'],
-        // [sequelize.col('listingInfo.product_name'), 'productName'],
       ],
       order: [['orderDate', 'DESC']],
       include: {
         model: ProductListing,
         as: 'listingInfo',
         attributes: ['title', 'listingId'],
+        include: {
+          model: Review,
+        }
       }
     });
     for (let order of orders) {
       const fmtDate = order.orderDate.toISOString().slice(0, 10);
       order.fmtDate = fmtDate;
+      order.listingInfo.Reviews.forEach(review => {
+        if (buyerEmail === review.dataValues.buyerEmail) {
+          order.isReviewed = true;
+        };
+      });
+      const isRated = await Rating.findOne({
+        where: {
+          sellerEmail: order.sellerEmail,
+          buyerEmail: buyerEmail,
+        }
+      })
+      if (isRated) order.isRated = true;
     }
     res.locals.orders = orders;
+    console.log(res.locals.orders);
   } catch (err) {
     console.log(err);
   }

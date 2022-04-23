@@ -3,7 +3,7 @@
   <h1>Order History</h1>
   <% for (let order of orders) { %>
   <div class="row mb-3 g-0 position-relative border">
-    <div class="col-9 p-4">
+    <div class="col-9 p-3">
       <a class="text-decoration-none" href="/listings/<%= order.listingInfo.listingId %>">
         <h5 class="card-title mb-2"><%= order.listingInfo.title %></h5>
       </a>
@@ -12,13 +12,17 @@
       <h6 class="card-subtitle mb-2">Quantity: <%= order.quantity %></h6>
       <h6 class="card-subtitle mb-2">Order Cost: $<%= order.payment %></h6>
     </div>
-    <div class="col-3 p-4 ps-0">
-      <a class="btn btn-primary m-2" href="/users/<%= order.sellerEmail %>/ratings/create">
-        Rate Seller
-      </a>
-      <a class="btn btn-primary m-2" href="/listings/<%= order.listingInfo.listingId %>/reviews/create">
-        Review Product
-      </a>
+    <div class="col-3 p-3 m-auto">
+      <% if (!order.isRated) { %>
+        <a class="btn btn-primary m-2" href="/users/<%= order.sellerEmail %>/ratings/create">
+          Rate Seller
+        </a>
+      <% } %>
+      <% if (!order.isReviewed) { %>
+        <a class="btn btn-primary m-2" href="/listings/<%= order.listingInfo.listingId %>/reviews/create">
+          Review Product
+        </a>
+      <% } %>
     </div>
   </div>
   <% } %>
