@@ -30,11 +30,13 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="/mynm">My Account</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/mynm/profile">Profile</a></li>
-            <li><a class="dropdown-item" href="/mynm/orders">Orders</a></li>
-            <li><a class="dropdown-item" href="/mynm/addresses">Addresses</a></li>
-            <li><a class="dropdown-item" href="/mynm/cards">Cards</a></li>
+            <% if (isBuyer) { %>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/mynm/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/mynm/orders">Orders</a></li>
+              <li><a class="dropdown-item" href="/mynm/addresses">Addresses</a></li>
+              <li><a class="dropdown-item" href="/mynm/cards">Cards</a></li>
+            <% } %>
             <% if (isSeller) { %>
               <li><a class="dropdown-item" href="/mynm/listings">Listings</a></li>
             <% } %>
