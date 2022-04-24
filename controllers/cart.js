@@ -1,9 +1,7 @@
 const { Op } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
 const { ProductListing, Cart, CartItem, Buyer, Address, Zipcode, Order, CreditCard } = require('../models');
 
 module.exports.addToCart = async (req, res) => {
-  const email = req.session.email;
   const listingId = req.body.listingId;
   const quantity = parseInt(req.body.quantity);
   if (quantity < 0) {
@@ -12,9 +10,7 @@ module.exports.addToCart = async (req, res) => {
   }
   try {
     const listing = await ProductListing.findOne({where: {listingId}});
-    let foundCart = await Cart.findOne({where: {email}});
-    if (!foundCart) foundCart = await Cart.create({ cartId: uuidv4(), email});
-
+    const foundCart = await Cart.findByPk(req.session.cartId);
     const foundCartItem = await CartItem.findOne({
       where: {
         [Op.and]: [
@@ -59,10 +55,9 @@ module.exports.removeCartItem = async (req, res) => {
 }
 
 module.exports.showCart = async (req, res) => {
-  const email = req.session.email;
+  console.log(req.session.cartId);
   try {
-    const foundCart = await Cart.findOne({
-      where: {email},
+    const foundCart = await Cart.findByPk(req.session.cartId, {
       include: {
         model: CartItem,
         attributes: ['cartId', 'listingId', 'quantity'],
@@ -71,6 +66,7 @@ module.exports.showCart = async (req, res) => {
         }
       }
     });
+    console.log(foundCart);
     const cartItems = []
     let totalPrice = 0
     for (let cartItem of foundCart.CartItems) {

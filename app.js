@@ -48,6 +48,7 @@ app.use((req, res, next) => {
   res.locals.user = req.session.email;
   res.locals.isBuyer = req.session.isBuyer;
   res.locals.isSeller = req.session.isSeller;
+  res.locals.cartId = req.session.cartId;
   res.locals.returnTo = req.originalUrl;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');

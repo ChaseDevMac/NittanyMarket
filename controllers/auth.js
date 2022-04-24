@@ -1,5 +1,6 @@
-const { User, Buyer, Seller } = require('../models');
+const { User, Buyer, Seller, Cart } = require('../models');
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 async function isValidLogin (email, password) {
   const foundUser = await User.findByPk(email);
@@ -36,6 +37,9 @@ module.exports.login = async (req, res) => {
     return res.redirect('/login');
   }
   req.session.email = req.body.user.email;
+  let foundCart = await Cart.findOne({where: {email}});
+  if (!foundCart) foundCart = await Cart.create({ cartId: uuidv4(), email});
+  req.session.cartId = foundCart.cartId
 
   if (await isBuyer(email)) req.session.isBuyer = true;
   if (await isSeller(email)) req.session.isSeller = true;
@@ -56,6 +60,8 @@ module.exports.register = async (req, res) => {
     const newUser = User.build({ email, password: hashPass });
     await newUser.save();
     req.session.email = newUser.email;
+    const newCart = await Cart.create({ cartId: uuidv4(), email});
+    req.session.cartId = newCart.cartId;
     return res.redirect('/');
   } catch (err) {
     console.log(err);
