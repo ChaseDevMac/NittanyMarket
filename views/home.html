@@ -1,5 +1,21 @@
 <% layout('layouts/generic') %>
 <h1>NittanyMarket</h1>
+<div class="container my-5">
+  <h2> Start exploring the marketplace </h2>
+  <form class="d-flex mb-5 mt-3" action="/marketplace/search" method="GET">
+    <input class="form-control me-2" type="search" name="q" placeholder="Search All Listings" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+  <% if (categories.length !== 0) { %>
+    <div class="row gy-3 gx-3 px-2">
+    <% for (let category of categories) { %>
+      <div class="list-group col-sm-6 col-md-4 col-lg-3">
+        <a href="/marketplace/<%= category.child %>#" class="list-group-item list-group-item-action"><%= category.child %></a>
+      </div>
+    <% } %>
+    </div>
+  <% } %>
+</div>
 <div class="accordion accordion-flush my-5" id="accordionFlush">
   <h2> FAQ </h2>
   <div class="accordion-item">
