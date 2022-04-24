@@ -8,7 +8,7 @@ CREATE TABLE Carts (
 
 CREATE TABLE CartItems (
   cart_id UUID,
-  listing_id INT NOT NULL UNIQUE,
+  listing_id INT NOT NULL,
   seller_email VARCHAR(255) NOT NULL,
   quantity INT NOT NULL,
 
