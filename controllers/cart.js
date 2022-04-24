@@ -2,14 +2,14 @@ const { Op } = require('sequelize');
 const { ProductListing, Cart, CartItem, Buyer, Address, Zipcode, Order, CreditCard } = require('../models');
 
 module.exports.addToCart = async (req, res) => {
-  const listingId = req.body.listingId;
+  const { listingId, sellerEmail } = req.body;
+  const inStock = parseInt(req.body.inStock);
   const quantity = parseInt(req.body.quantity);
-  if (quantity < 0) {
+  if (quantity < 0 || (inStock < quantity)) {
     req.flash('error', 'invalid quantity');
     res.redirect(`/listings/${listingId}`);
   }
   try {
-    const listing = await ProductListing.findOne({where: {listingId}});
     const foundCart = await Cart.findByPk(req.session.cartId);
     const foundCartItem = await CartItem.findOne({
       where: {
@@ -23,7 +23,7 @@ module.exports.addToCart = async (req, res) => {
       await CartItem.create({
         cartId: foundCart.cartId,
         listingId,
-        sellerEmail: listing.sellerEmail,
+        sellerEmail,
         quantity,
       });
     } else {

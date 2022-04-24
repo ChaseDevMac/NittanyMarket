@@ -26,6 +26,8 @@
       <strong><%= listing.quantity %> in stock</strong>
       <form class="validate-form" action="/cart" method="POST" novalidate>
         <input type="hidden" name="listingId", value="<%= listing.listingId %>">
+        <input type="hidden" name="inStock", value="<%= listing.quantity %>">
+        <input type="hidden" name="sellerEmail", value="<%= listing.sellerEmail %>">
         <div class="form-floating mb-2 col-12">
           <input type="text" class="form-control" id="quantity" name="quantity" value="1" required>
           <label for="floatingInput">Quantity</label>
