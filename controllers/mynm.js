@@ -67,7 +67,6 @@ module.exports.getOrders = async function (req, res, next) {
       if (isRated) order.isRated = true;
     }
     res.locals.orders = orders;
-    console.log(res.locals.orders);
   } catch (err) {
     console.log(err);
   }

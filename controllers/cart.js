@@ -5,7 +5,11 @@ const { ProductListing, Cart, CartItem, Buyer, Address, Zipcode, Order, CreditCa
 module.exports.addToCart = async (req, res) => {
   const email = req.session.email;
   const listingId = req.body.listingId;
-  const quantity = req.body.quantity;
+  const quantity = parseInt(req.body.quantity);
+  if (quantity < 0) {
+    req.flash('error', 'invalid quantity');
+    res.redirect(`/listings/${listingId}`);
+  }
   try {
     const listing = await ProductListing.findOne({where: {listingId}});
     let foundCart = await Cart.findOne({where: {email}});
@@ -43,6 +47,17 @@ module.exports.addToCart = async (req, res) => {
   }
 };
 
+module.exports.removeCartItem = async (req, res) => {
+  const { cartItem } = req.body;
+  await CartItem.destroy({
+    where: {
+      cartId: cartItem.cartId,
+      listingId: cartItem.listingId,
+    }
+  });
+  res.redirect('/cart');
+}
+
 module.exports.showCart = async (req, res) => {
   const email = req.session.email;
   try {
@@ -50,9 +65,7 @@ module.exports.showCart = async (req, res) => {
       where: {email},
       include: {
         model: CartItem,
-        attributes: [
-          'quantity',
-        ],
+        attributes: ['cartId', 'listingId', 'quantity'],
         include: {
           model: ProductListing,
         }
@@ -62,6 +75,8 @@ module.exports.showCart = async (req, res) => {
     let totalPrice = 0
     for (let cartItem of foundCart.CartItems) {
       cartItems.push({
+        cartId: cartItem.cartId,
+        listingId: cartItem.listingId,
         quantity: cartItem.quantity,
         title: cartItem.ProductListing.title,
         price: cartItem.ProductListing.price,
@@ -114,14 +129,21 @@ module.exports.showCheckout = async (req, res) => {
 
 module.exports.checkout = async (req, res) =>{
   const buyerEmail = req.session.email;
-  const foundCart = await Cart.findOne({
-    where: {email: buyerEmail},
-    include: {
-      model: CartItem,
-      include: { model: ProductListing }
-    },
-  });
   try {
+    const foundCart = await Cart.findOne({
+      where: {email: buyerEmail},
+      include: {
+        model: CartItem,
+        include: { model: ProductListing }
+      },
+    });
+    for (let cartItem of foundCart.CartItems) {
+      const qtyDiff = cartItem.ProductListing.quantity - cartItem.quantity;
+      if ( qtyDiff < 0 ) {
+        req.flash('error', `Please remove ${Math.abs(qtyDiff)} ${cartItem.ProductListing.title}`);
+        return res.redirect('/cart');
+      }
+    }
     for (let cartItem of foundCart.CartItems) {
       const transactionId = Math.floor(Math.random() * 1111111111);
       const listing = cartItem.ProductListing;
@@ -141,11 +163,11 @@ module.exports.checkout = async (req, res) =>{
       await listing.save();
 
       await cartItem.destroy();
+
+      req.flash('success', 'Your order has been placed!');
+      res.redirect('/mynm/orders');
     }
   } catch (err) {
     console.log(err);
   }
-
-  req.flash('success', 'Your order has been placed!');
-  res.redirect('/mynm/orders');
 };

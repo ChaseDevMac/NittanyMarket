@@ -6,7 +6,8 @@ const userMidware = require('../middleware/users');
 
 router.route('/')
   .get(userMidware.requiresLogin, cartCtrl.showCart)
-  .post(userMidware.requiresLogin, cartCtrl.addToCart);
+  .post(userMidware.requiresLogin, cartCtrl.addToCart)
+  .delete(userMidware.requiresLogin, cartCtrl.removeCartItem);
 
 router.route('/checkout')
   .get(userMidware.requiresLogin, cartCtrl.showCheckout)
