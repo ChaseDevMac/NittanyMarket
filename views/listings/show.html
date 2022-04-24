@@ -24,11 +24,14 @@
     </div>
     <div class="col-4 p-4 align-self-end">
       <strong><%= listing.quantity %> in stock</strong>
-      <form action="/cart" method="POST">
+      <form class="validate-form" action="/cart" method="POST" novalidate>
         <input type="hidden" name="listingId", value="<%= listing.listingId %>">
         <div class="form-floating mb-2 col-12">
-          <input type="text" class="form-control" id="quantity" name="quantity" value="1">
+          <input type="text" class="form-control" id="quantity" name="quantity" value="1" required>
           <label for="floatingInput">Quantity</label>
+          <div class="invalid-feedback">
+            Add desired quantity
+          </div>
         </div>
         <button class="btn btn-primary col-12">Add to cart</button>
       </form>
