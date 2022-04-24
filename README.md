@@ -36,7 +36,7 @@ NittanyMarket is an eBay-like E-commerce platform for the fictional school Nitta
 * [Express.js](https://expressjs.com): Backend web framework built on Node.js to handle all NittanyMarket business logic
 * [Bootstrap](https://getbootstrap.com): CSS framework for quick front end development
 * [MariaDB](https://mariadb.com): RDBMS to handle all NittanyMarket data 
-* [Redis](https://redis.io): in-memory database to handle user session data
+* [Redis](https://redis.io): in-memory database to manage user session data
 
 ### Design Decisions
 
