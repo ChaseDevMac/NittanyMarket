@@ -15,16 +15,16 @@ module.exports.isLoggedIn = async function (req, res, next) {
 
 module.exports.requiresSeller = async function (req, res, next) {
   if (!req.session.isSeller) {
-    req.flash('error', 'You need a seller account type!');
-    return res.redirect('/');
+    req.flash('error', 'You need to apply to become a seller');
+    return res.redirect('/users/seller-app');
   }
   next();
 }
 
 module.exports.requiresBuyer = async function (req, res, next) {
   if (!req.session.isBuyer) {
-    req.flash('error', 'You need a buyer account type!');
-    return res.redirect('/');
+    req.flash('error', 'You need to finish completing your account setup');
+    return res.redirect('/users/become-a-buyer');
   }
   next();
 }
