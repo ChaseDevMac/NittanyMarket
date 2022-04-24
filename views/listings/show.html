@@ -1,21 +1,18 @@
 <% layout('layouts/generic') %>
-<div class="col-10 offset-1 mb-3">
+<div class="container col-10 mx-auto mb-3">
   <div class="row border">
-    <div class="col-8">
+    <div class="col-8 p-4">
       <h2 class="card-title"><%= listing.title %></h5>
-      <p>Seller: 
+      <p>
         <a class="text-decoration-none" href="/users/<%= listing.sellerEmail %>">
           <%= listing.sellerEmail %>
         </a>
-      </p>
-      <p><% if (sellerRating) { %>
+      <% if (sellerRating) { %>
         <%= sellerRating %>★
-      <% } else { %>
-        Unrated
-      <% } %></p>
-      <p>Description: <%= listing.productDesc %></p>
-      <p>Price: $<%= listing.price %></p>
-      <p>In Stock: <%= listing.quantity %></p>
+      <% } %>
+      </p>
+      <h4 class="mb-5">$<%= listing.price %></h4>
+      <p><%= listing.productDesc %></p>
       <% if (listing.postDate) { %>
         <p>Posted on: <%= listing.postDate %></p>
       <% } %>
@@ -25,14 +22,15 @@
         </a>
       </p>
     </div>
-    <div class="col-4">
+    <div class="col-4 p-4 align-self-end">
+      <strong><%= listing.quantity %> in stock</strong>
       <form action="/cart" method="POST">
         <input type="hidden" name="listingId", value="<%= listing.listingId %>">
-        <div class="form-input mt-2 mb-2 col-3">
-          <label class="form-label" for="quantity">Quantity</label>
-          <input type="text" class="form-control" id="quantity" name="quantity" placeholder="1">
+        <div class="form-floating mb-2 col-12">
+          <input type="text" class="form-control" id="quantity" name="quantity" value="1">
+          <label for="floatingInput">Quantity</label>
         </div>
-        <button class="btn btn-primary">Add to cart</button>
+        <button class="btn btn-primary col-12">Add to cart</button>
       </form>
     </div>
   </div>
