@@ -1,35 +1,40 @@
 <% layout('layouts/generic') %>
 <div class="container mx-auto">
   <div class="col-8 mb-3">
-    <h2>Shopping Cart</h2>
-    <% for (let cartItem of cartItems) { %>
-      <div class="row border m-2 p-3">
-        <div class="col-6">
-          <h5 class="card-title"><%= cartItem.title %></h5>
+    <h2 class="mb-5">Shopping Cart</h2>
+    <% if (cartItems.length === 0) { %>
+      <h4>You're cart's empty</h4>
+      <a class="btn btn-primary" href="/marketplace">Start Shopping</a>
+    <% } else { %>
+      <% for (let cartItem of cartItems) { %>
+        <div class="row border m-2 p-3">
+          <div class="col-6">
+            <h5 class="card-title"><%= cartItem.title %></h5>
+          </div>
+          <div class="col-3">
+            <p>Price: $<%= cartItem.price %></p>
+            <p>Quantity: <%= cartItem.quantity %></p>
+          </div>
+          <div class="col-1 m-auto">
+            <form action="/cart?_method=DELETE" method="POST">
+              <input type="hidden" name="cartItem[cartId]", value="<%= cartItem.cartId %>">
+              <input type="hidden" name="cartItem[listingId]", value="<%= cartItem.listingId %>">
+              <input class="btn btn-danger" type="submit" name="removeCartItem" value="Remove">
+            </form>
+          </div>
         </div>
-        <div class="col-3">
-          <p>Price: $<%= cartItem.price %></p>
-          <p>Quantity: <%= cartItem.quantity %></p>
-        </div>
-        <div class="col-1 m-auto">
-          <form action="/cart?_method=DELETE" method="POST">
-            <input type="hidden" name="cartItem[cartId]", value="<%= cartItem.cartId %>">
-            <input type="hidden" name="cartItem[listingId]", value="<%= cartItem.listingId %>">
-            <input class="btn btn-danger" type="submit" name="removeCartItem" value="Remove">
-          </form>
-        </div>
+      <% } %>
       </div>
-    <% } %>
+    <div>
+      <h2> Total: $<%= totalPrice %></h2>
     </div>
-  <div>
-    <h2> Total: $<%= totalPrice %></h2>
-  </div>
-  <div>
-    <form action="/cart/checkout" method="GET">
-      <div class="col-12">
-        <input type="hidden" name="totalPrice", value="<%= totalPrice %>">
-        <button type="submit" class="btn btn-primary">Checkout</button>
-      </div>
-    </form>
-  </div>
+    <div>
+      <form action="/cart/checkout" method="GET">
+        <div class="col-12">
+          <input type="hidden" name="totalPrice", value="<%= totalPrice %>">
+          <button type="submit" class="btn btn-primary">Checkout</button>
+        </div>
+      </form>
+    </div>
+    <% } %>
 </div>
