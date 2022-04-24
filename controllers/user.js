@@ -25,3 +25,11 @@ module.exports.renderUser = async (req, res) => {
   res.locals.sellerRating = sellerRating[0].dataValues.avgRating;
   res.render('users/show');
 };
+
+module.exports.renderBuyerForm = (req, res) => {
+  res.render('users/buyer_form');
+};
+
+module.exports.renderSellerForm = (req, res) => {
+  res.render('users/seller_form');
+};
