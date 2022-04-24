@@ -2,8 +2,10 @@
 <div class="col-6 offset-3">
   <h1>My Account</h1>
   <ul class="list-group">
-    <% if (isBuyer) { %>
+    <% if (user) { %>
       <a class="list-group-item list-group-item-action text-decoration-none" href="/mynm/profile">Personal Infomation</a>
+    <% } %>
+    <% if (isBuyer) { %>
       <a class="list-group-item list-group-item-action text-decoration-none" href="/mynm/orders">Order History</a>
       <a class="list-group-item list-group-item-action text-decoration-none" href="/mynm/addresses">Saved Addresses</a>
       <a class="list-group-item list-group-item-action text-decoration-none" href="/mynm/cards">Payment Cards</a>

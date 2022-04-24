@@ -5,10 +5,12 @@
     <div class="row">
       <div class="col-8">
         <div class="card-body">
+          <h6 class="card-subtitle mb-2">Email: <%= user %></h6>
+          <% if (isBuyer) { %>
           <h6 class="card-subtitle mb-2">Name: <%= profile.firstName %> <%= profile.lastName %></h6>
-          <h6 class="card-subtitle mb-2">Email: <%= profile.email %></h6>
           <h6 class="card-subtitle mb-2">Age: <%= profile.age %></h6>
           <h6 class="card-subtitle mb-2">Gender: <%= profile.gender %></h6>
+          <% } %>
         </div>
       </div>
     </div>

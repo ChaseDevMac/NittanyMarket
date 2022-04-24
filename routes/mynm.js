@@ -12,7 +12,7 @@ router.route('/change_password')
   .get(requiresLogin, mynmCtrl.changePasswordForm)
   .post(requiresLogin, mynmCtrl.validatePasswordChange, mynmCtrl.changePassword);
 
-router.get('/profile', requiresLogin, requiresBuyer, mynmCtrl.getProfile, mynmCtrl.viewProfile);
+router.get('/profile', requiresLogin, mynmCtrl.getProfile, mynmCtrl.viewProfile);
 
 router.get('/orders', requiresLogin, requiresBuyer, mynmCtrl.getOrders, mynmCtrl.viewOrders);
 
