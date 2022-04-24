@@ -2,24 +2,24 @@ const express = require('express');
 const router = express.Router();
 
 const mynmCtrl = require('../controllers/mynm');
-const { requiresLogin } = require('../middleware/users');
+const { requiresLogin, requiresBuyer, requiresSeller } = require('../middleware/users');
 
 router.get('/logout', requiresLogin, mynmCtrl.logout);
 
 router.get('/', requiresLogin, mynmCtrl.account);
 
-router.get('/change_password', requiresLogin, mynmCtrl.changePasswordForm);
+router.route('/change_password')
+  .get(requiresLogin, mynmCtrl.changePasswordForm)
+  .post(requiresLogin, mynmCtrl.validatePasswordChange, mynmCtrl.changePassword);
 
-router.post('/change_password', requiresLogin, mynmCtrl.validatePasswordChange, mynmCtrl.changePassword);
+router.get('/profile', requiresLogin, requiresBuyer, mynmCtrl.getProfile, mynmCtrl.viewProfile);
 
-router.get('/profile', requiresLogin, mynmCtrl.getProfile, mynmCtrl.viewProfile);
+router.get('/orders', requiresLogin, requiresBuyer, mynmCtrl.getOrders, mynmCtrl.viewOrders);
 
-router.get('/orders', requiresLogin, mynmCtrl.getOrders, mynmCtrl.viewOrders);
+router.get('/addresses', requiresLogin, requiresBuyer, mynmCtrl.viewAddresses);
 
-router.get('/addresses', requiresLogin, mynmCtrl.viewAddresses);
+router.get('/cards', requiresLogin, requiresBuyer, mynmCtrl.getCreditCards, mynmCtrl.viewCards);
 
-router.get('/cards', requiresLogin, mynmCtrl.getCreditCards, mynmCtrl.viewCards);
-
-router.get('/listings', requiresLogin, mynmCtrl.viewListings);
+router.get('/listings', requiresLogin, requiresSeller, mynmCtrl.viewListings);
 
 module.exports = router;
