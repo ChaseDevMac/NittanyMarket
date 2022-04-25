@@ -22,11 +22,10 @@
         </a>
       </p>
     </div>
-    <% if (listing.quantity <= 0 ) { %>
-      <div class="col-4 p-4 align-self-end">
-      <strong>OUT OF STOCK</strong>
-    <% } else { %>
     <div class="col-4 p-4 align-self-end">
+      <% if (listing.quantity <= 0 ) { %>
+        <strong>OUT OF STOCK</strong>
+      <% } else { %>
       <strong><%= listing.quantity %> in stock</strong>
       <form class="validate-form" action="/cart" method="POST" novalidate>
         <input type="hidden" name="listingId", value="<%= listing.listingId %>">
@@ -41,13 +40,13 @@
         </div>
         <button class="btn btn-primary col-12">Add to cart</button>
       </form>
-    </div>
     <% } %>
+    </div>
   </div>
 </div>
 
 
-<div class="col-10 mx-auto mt-4">
+<div class="col-8 mx-auto mt-4">
     <h2>Reviews</h2>
     <% if (reviews) { %>
       <% for (let review of reviews) {%>
