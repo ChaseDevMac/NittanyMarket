@@ -24,6 +24,7 @@ redisClient.on('error', (err) => {
   console.log('Redis Error: ', err);
 });
 
+// configuration object for handling sessions
 const sessionConfig = {
   secret: 'PennStateIsBetterThanNittanyState',
   resave: false,
@@ -42,8 +43,8 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
-//Middleware
 app.use(express.urlencoded({extended: true}));
+// All the session information stored in Redis
 app.use((req, res, next) => {
   res.locals.user = req.session.email;
   res.locals.isBuyer = req.session.isBuyer;
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// import all routes
 const authRoutes = require('./routes/auth');
 const mynmRoutes = require('./routes/mynm');
 const listingRoutes = require('./routes/listing');
@@ -64,7 +66,7 @@ const marketplaceRoutes = require('./routes/marketplace');
 const cartRoutes = require('./routes/cart');
 const userRoutes = require('./routes/user');
 
-//routes
+// routes
 app.use('/', authRoutes);
 app.use('/mynm', mynmRoutes);
 app.use('/listings', listingRoutes);
@@ -74,16 +76,19 @@ app.use('/users/:sellerEmail/ratings', ratingRoutes);
 app.use('/cart', cartRoutes);
 app.use('/users', userRoutes);
 
+// render home page with categories
 app.get('/', async (req, res) => {
   const categories = await Category.findAll({where: {parent: 'Root'}});
   res.locals.categories = categories;
   res.render('home');
 });
 
+// catch-all for any requested pages that don't exist
 app.all('*', (req, res) => {
   res.render('not_found');
 });
 
+// port for the server to listen to
 app.listen(PORT, (err) => {
   try {
     console.log(`Listening on ${PORT}`);
