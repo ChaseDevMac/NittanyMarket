@@ -1,16 +1,21 @@
 const { Op } = require('sequelize');
 const { ProductListing, Cart, CartItem, Buyer, Address, Zipcode, Order, CreditCard } = require('../models');
 
+// Add a desired item to the user's cart
 module.exports.addToCart = async (req, res) => {
   const { listingId, sellerEmail } = req.body;
   const inStock = parseInt(req.body.inStock);
   const quantity = parseInt(req.body.quantity);
+
+  // verify the desired quantity is valid
   if (quantity < 0 || (inStock < quantity)) {
     req.flash('error', 'invalid quantity');
     res.redirect(`/listings/${listingId}`);
   }
   try {
     const foundCart = await Cart.findByPk(req.session.cartId);
+
+    // find if the item being added to the cart is already in the cart
     const foundCartItem = await CartItem.findOne({
       where: {
         [Op.and]: [
@@ -19,6 +24,7 @@ module.exports.addToCart = async (req, res) => {
         ]
       }
     });
+    // if the item is not already in the cart insert it into database
     if (!foundCartItem) {
       await CartItem.create({
         cartId: foundCart.cartId,
@@ -26,6 +32,7 @@ module.exports.addToCart = async (req, res) => {
         sellerEmail,
         quantity,
       });
+    // if the item is already in the cart add additional quantity to it
     } else {
       const updatedQty = foundCartItem.dataValues.quantity + quantity;
       CartItem.update({quantity: updatedQty}, {
@@ -43,6 +50,7 @@ module.exports.addToCart = async (req, res) => {
   }
 };
 
+// removes a desired item from the user's cart
 module.exports.removeCartItem = async (req, res) => {
   const { cartItem } = req.body;
   await CartItem.destroy({
@@ -54,9 +62,10 @@ module.exports.removeCartItem = async (req, res) => {
   res.redirect('/cart');
 }
 
+// Display the cart's contents tied to that user
 module.exports.showCart = async (req, res) => {
-  console.log(req.session.cartId);
   try {
+    // find the cart and its contents associated with the given user
     const foundCart = await Cart.findByPk(req.session.cartId, {
       include: {
         model: CartItem,
@@ -66,7 +75,7 @@ module.exports.showCart = async (req, res) => {
         }
       }
     });
-    console.log(foundCart);
+    // format the way cart items are displayed and tally the total price of cart
     const cartItems = []
     let totalPrice = 0
     for (let cartItem of foundCart.CartItems) {
@@ -76,6 +85,7 @@ module.exports.showCart = async (req, res) => {
         quantity: cartItem.quantity,
         title: cartItem.ProductListing.title,
         price: cartItem.ProductListing.price,
+        subTotal: cartItem.quantity * cartItem.ProductListing.price,
       });
       totalPrice += cartItem.ProductListing.price * cartItem.quantity;
     }
@@ -87,6 +97,7 @@ module.exports.showCart = async (req, res) => {
   }
 };
 
+// finds all the address information associated with a given buyer
 async function getFullBuyerInfo(email) {
   const result = await Buyer.findByPk(email, {
     attributes: ['firstName', 'lastName'],
@@ -111,9 +122,12 @@ async function getFullBuyerInfo(email) {
   return result;
 }
 
+// displays the checkout page
 module.exports.showCheckout = async (req, res) => {
   const email = req.session.email;
   const buyerInfo = await getFullBuyerInfo(email);
+
+  // only send the last four digits of credit card number
   const creditCard = await CreditCard.findOne({where: {owner: email}});
   creditCard.dataValues.ccn = '****' + creditCard.dataValues.ccn.slice(-4);
 
@@ -123,6 +137,7 @@ module.exports.showCheckout = async (req, res) => {
   res.render('cart/checkout');
 };
 
+// triggered when the user places their order
 module.exports.checkout = async (req, res) =>{
   const buyerEmail = req.session.email;
   try {
@@ -133,6 +148,7 @@ module.exports.checkout = async (req, res) =>{
         include: { model: ProductListing }
       },
     });
+    // verify the quantity of each cart item is still valid
     for (let cartItem of foundCart.CartItems) {
       const qtyDiff = cartItem.ProductListing.quantity - cartItem.quantity;
       if ( qtyDiff < 0 ) {
@@ -140,6 +156,7 @@ module.exports.checkout = async (req, res) =>{
         return res.redirect('/cart');
       }
     }
+    // for each cart item, create a new order
     for (let cartItem of foundCart.CartItems) {
       const transactionId = Math.floor(Math.random() * 1111111111);
       const listing = cartItem.ProductListing;
@@ -155,14 +172,15 @@ module.exports.checkout = async (req, res) =>{
         orderDate: new Date().toISOString().replace('T', ' '),
       });
 
+      // update the quantity of the listing
       await listing.update({quantity: newStock});
       await listing.save();
 
+      // remove the cart item from the cart
       await cartItem.destroy();
-
-      req.flash('success', 'Your order has been placed!');
-      res.redirect('/mynm/orders');
     }
+    req.flash('success', 'Your order has been placed!');
+    res.redirect('/mynm/orders');
   } catch (err) {
     console.log(err);
   }
