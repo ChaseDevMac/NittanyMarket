@@ -17,7 +17,14 @@
       <ul>
         <li><a href="#tech-stack">Tech Stack</a></li>
         <li><a href="#design-decisions">Design Decisions</a></li>
-        <li><a href="#functionality">Functionality</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#functionality">Functionality</a>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#core-features">Core Features</a></li>
+        <li><a href="#extra-features">Extra Features</a></li>
       </ul>
     </li>
     <li><a href="#contact">Contact</a></li>
@@ -45,7 +52,9 @@ NittanyMarket is an eBay-like E-commerce platform for the fictional school Nitta
 * RESTful API
 * [Sequelize](https://sequelize.org) ORM abstraction layer for MariaDB for cleaner, more maintainable code
 
-### Functionality
+## Functionality
+
+### Overview
 * Visiters can browse the website through the category hierarchy or searching all of NittanyMarket (without being signed in)
 * Once a visiter wants to add an item to their cart, they must first login or register
 * Once logged in/registered users can add/remove items from their cart, view their account details, and change their password
@@ -53,6 +62,18 @@ NittanyMarket is an eBay-like E-commerce platform for the fictional school Nitta
 * Users can then place an order, review the product associated with that order, and/or rate the seller of the product
 * If a user wants to create their own product listing, they must first get approval from the admin by submitting a seller application
 * Sellers are also able to edit or remove product listings. If removed, no one but the seller can see the listing
+
+### Core Features
+* Login and registration
+* View user account information and change password
+* Explore the marketplace, filtering through the category hierarchy
+* Place an order
+
+### Extra Features
+* Create a product listing
+* Review a listing and its seller/owner once ordered
+* Manage items in shopping cart
+* Search the marketplace's listings
 
 <!-- CONTACT -->
 ## Contact
