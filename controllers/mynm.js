@@ -3,8 +3,10 @@ const bcrypt = require('bcrypt');
 const { sequelize } = require('../utils/database');
 const { User, Buyer, Order, Address, Zipcode, ProductListing, Review, Rating } = require('../models');
 
+// validate the password change request
 module.exports.validatePasswordChange = async function (req, res, next) {
   const { password, 'conf-password': confPassword } = req.body.user;
+  // verify that the password fields match
   if (password !== confPassword) {
     return res.send("Error: passwords don't match");
   }
@@ -17,17 +19,13 @@ module.exports.validatePasswordChange = async function (req, res, next) {
   next();
 };
 
+// find the information about a buyer
 module.exports.getProfile = async function (req, res, next) {
-  try {
-    const email = req.session.email;
-    const profile = await Buyer.findByPk(email);
-    res.locals.profile = profile;
-  } catch (err) {
-    console.log(err);
-  }
+  res.locals.profile = await Buyer.findByPk(req.session.email);
   next();
 };
 
+// find all the orders for a buyer
 module.exports.getOrders = async function (req, res, next) {
   try {
     const buyerEmail = req.session.email;
@@ -50,8 +48,10 @@ module.exports.getOrders = async function (req, res, next) {
         }
       }
     });
+
+    // For each order check if the user has reviewed and/or rated that order/seller
     for (let order of orders) {
-      const fmtDate = order.orderDate.toISOString().slice(0, 10);
+      const fmtDate = order.orderDate.toISOString().slice(0, 10); // remove time component of date
       order.fmtDate = fmtDate;
       order.listingInfo.Reviews.forEach(review => {
         if (buyerEmail === review.dataValues.buyerEmail) {
@@ -73,6 +73,7 @@ module.exports.getOrders = async function (req, res, next) {
   next();
 };
 
+// find all the address information on a buyer
 async function getBuyerAddress(email) {
   const result = await Buyer.findByPk(email, {
     attributes: ['firstName', 'lastName'],
@@ -97,6 +98,7 @@ async function getBuyerAddress(email) {
   return result;
 }
 
+// find the credit card associated with a buyer
 module.exports.getCreditCards = async function (req, res, next) {
   try {
     const email = req.session.email;
@@ -143,9 +145,9 @@ module.exports.viewOrders = (req, res) => {
 
 module.exports.viewAddresses = async (req, res) => {
   const result = await getBuyerAddress(req.session.email);
-  // res.send(result.homeAddress);
   const homeAddress = result.homeAddress;
   const billAddress = result.billAddress;
+  // format billing and home address for HTML template
   res.locals.homeAddr = {
     "name": `${result.firstName} ${result.lastName}`,
     "streetInfo": `${homeAddress.streetNum} ${homeAddress.streetName}`,
