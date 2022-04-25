@@ -10,7 +10,7 @@ module.exports.addToCart = async (req, res) => {
   // verify the desired quantity is valid
   if (quantity < 0 || (inStock < quantity)) {
     req.flash('error', 'invalid quantity');
-    res.redirect(`/listings/${listingId}`);
+    return res.redirect(`/listings/${listingId}`);
   }
   try {
     const foundCart = await Cart.findByPk(req.session.cartId);
