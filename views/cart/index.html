@@ -9,11 +9,15 @@
       <% for (let cartItem of cartItems) { %>
         <div class="row border m-2 p-3">
           <div class="col-6">
-            <h5 class="card-title"><%= cartItem.title %></h5>
+            <h5 class="card-title"><a class="text-decoration-none" href="/listings/<%= cartItem.listingId %>">
+                <%= cartItem.title %>
+            </a></h5>
           </div>
           <div class="col-3">
             <p>Price: $<%= cartItem.price %></p>
             <p>Quantity: <%= cartItem.quantity %></p>
+            <hr/>
+            <p>Subtotal: $<%= cartItem.subTotal %></p>
           </div>
           <div class="col-1 m-auto">
             <form action="/cart?_method=DELETE" method="POST">
