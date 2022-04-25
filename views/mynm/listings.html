@@ -1,14 +1,15 @@
 <% layout('layouts/generic') %>
 <div class="col-md-8 col-lg-10 mx-auto">
   <h1> My Listings </h1>
+  <a class="btn btn-primary mt-3 mb-5" href="/listings/create">Create a listing</a>
   <% for (let listing of listings) { %>
   <div class="row my-3 g-0 position-relative border">
     <div class="col-9 p-3">
       <a class="text-decoration-none" href="/listings/<%= listing.listingId %>">
         <h5 class="card-title mb-2"><%= listing.title %></h5>
       </a>
-      <h6 class="card-subtitle mb-2">Quantity: <%= listing.quantity %></h6>
-      <h6 class="card-subtitle mb-2">Cost: $<%= listing.price %></h6>
+      <h6 class="card-subtitle mb-2">Stock: <%= listing.quantity %></h6>
+      <h6 class="card-subtitle mb-2">Price: $<%= listing.price %></h6>
     </div>
     <div class="col-3 p-3 my-auto">
       <% if (!listing.removeDate) { %>
